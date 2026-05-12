@@ -36,3 +36,6 @@ build
 
 # PWA
 dev-dist
+
+# Claude Code
+.claude/
