@@ -274,7 +274,7 @@ export function BrewRunningScreen({ day, onFinish }) {
                     textShadow: isPour ? '0 1px 2px rgba(30,90,143,0.4)' : 'none',
                   }}
                 >
-                  hasta {currentStep.water} g
+                  hasta {currentStep.water} g de agua
                 </div>
               )}
             </div>
