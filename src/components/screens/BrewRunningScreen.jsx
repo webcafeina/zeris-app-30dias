@@ -306,7 +306,6 @@ export function BrewRunningScreen({ day, onFinish }) {
                 size={240}
                 stroke={13}
                 dangerAt={5}
-                noDrain
               >
                 {isPour && pourDuration > 0 && (
                   <WaterFill
