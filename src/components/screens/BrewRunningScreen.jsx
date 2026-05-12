@@ -309,7 +309,9 @@ export function BrewRunningScreen({ day, onFinish }) {
                       textTransform: 'uppercase',
                     }}
                   >
-                    {ACTION_LABEL[currentStep?.action] || 'Paso'}
+                    {isPour && pourDuration > 0
+                      ? (stillPouring ? 'VIERTE' : 'ESPERA')
+                      : (ACTION_LABEL[currentStep?.action] || 'Paso')}
                   </div>
                   <div
                     style={{
