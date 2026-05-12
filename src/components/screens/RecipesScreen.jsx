@@ -1,9 +1,38 @@
-import { useState } from 'react';
-import { ChevronLeft, Check, Clock, Droplet, ArrowRight } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { ChevronLeft, Check, Clock, Droplet, ArrowRight, Search, X } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
 import { BARISTAS, getBarista } from '../../data/baristas';
 import { formatTime } from '../../lib/format';
+
+// Comprueba si una receta (día) hace match con la query del buscador.
+// Busca contra: título, molienda, fondo, ratio, gramajes (café/agua), temp,
+// y el nombre del barista si hay baristaId.
+function matchesQuery(day, q) {
+  if (!q) return true;
+  const needle = q.toLowerCase().trim();
+  if (!needle) return true;
+  const barista = day.baristaId ? getBarista(day.baristaId) : null;
+  const haystack = [
+    day.title,
+    day.grind,
+    day.bottom,
+    day.ratio,
+    `${day.coffee} g`,
+    `${day.water} g`,
+    `${day.temp} °C`,
+    `${day.coffee}g`,
+    `${day.water}g`,
+    `dia ${day.num}`,
+    `día ${day.num}`,
+    barista?.name,
+    barista?.country,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  return haystack.includes(needle);
+}
 
 const PHASE_ORDER = ['Fundamentos', 'Variables', 'Los 4 fondos', 'Campeones', 'Cierre'];
 const TYPE_LABEL = { brew: 'BREW', taste: 'CATA', reflect: 'REFLEXIÓN' };
@@ -310,9 +339,23 @@ function groupByAuthor(brewDays) {
 // Dos modos vía toggle: por orden del curso o por autor.
 export function RecipesScreen({ state, onBack, onDayClick }) {
   const [mode, setMode] = useState('author'); // 'phase' o 'author'
+  const [query, setQuery] = useState('');
 
-  const brewDays = DAYS.filter((d) => d.type === 'brew');
-  const authorGroups = groupByAuthor(brewDays);
+  const brewDays = useMemo(() => DAYS.filter((d) => d.type === 'brew'), []);
+  const filteredBrewDays = useMemo(
+    () => brewDays.filter((d) => matchesQuery(d, query)),
+    [brewDays, query],
+  );
+  const authorGroups = useMemo(
+    () => groupByAuthor(filteredBrewDays),
+    [filteredBrewDays],
+  );
+  const phaseDaysAll = useMemo(
+    () => DAYS.filter((d) => matchesQuery(d, query)),
+    [query],
+  );
+
+  const hasResults = mode === 'author' ? authorGroups.length > 0 : phaseDaysAll.length > 0;
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg, paddingBottom: 32 }}>
@@ -345,6 +388,59 @@ export function RecipesScreen({ state, onBack, onDayClick }) {
         <p style={{ color: C.textMute, fontSize: 13, lineHeight: 1.5, marginTop: 8 }}>
           Todas las recetas del reto, agrupadas para consulta rápida. Toca "empezar" para hacer la receta como ejercicio guiado.
         </p>
+      </div>
+
+      {/* Buscador */}
+      <div style={{ padding: '0 20px 14px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '12px 14px',
+            background: C.surface,
+            border: 'none',
+            borderRadius: 14,
+            boxShadow: C.shadowInSoft,
+          }}
+        >
+          <Search size={16} style={{ color: C.textFaint, flexShrink: 0 }} />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Buscar receta, autor, gramaje, ratio…"
+            aria-label="Buscar receta"
+            style={{
+              flex: 1,
+              minWidth: 0,
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+              fontSize: 14,
+              color: C.text,
+              padding: 0,
+            }}
+          />
+          {query && (
+            <button
+              onClick={() => setQuery('')}
+              aria-label="Borrar búsqueda"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                color: C.textFaint,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 0,
+              }}
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Toggle: por curso / por autor */}
@@ -387,8 +483,20 @@ export function RecipesScreen({ state, onBack, onDayClick }) {
         </div>
       </div>
 
+      {/* Sin resultados */}
+      {!hasResults && (
+        <div style={{ padding: '20px 30px', textAlign: 'center' }}>
+          <div style={{ fontSize: 10, letterSpacing: '2.5px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>
+            Nada encontrado
+          </div>
+          <p style={{ color: C.textMute, fontSize: 13, lineHeight: 1.5 }}>
+            Prueba con otro término: nombre de barista, gramaje (ej. "230"), fondo (FAST, OPEN) o ratio (1:16).
+          </p>
+        </div>
+      )}
+
       {/* Modo POR AUTOR */}
-      {mode === 'author' && (
+      {mode === 'author' && hasResults && (
         <div style={{ padding: '0 20px' }}>
           {authorGroups.map((group) => (
             <BaristaSection
@@ -403,10 +511,10 @@ export function RecipesScreen({ state, onBack, onDayClick }) {
       )}
 
       {/* Modo POR CURSO (vista original, por fases) */}
-      {mode === 'phase' && (
+      {mode === 'phase' && hasResults && (
         <div style={{ padding: '0 20px' }}>
           {PHASE_ORDER.map((phase) => {
-            const phaseDays = DAYS.filter((d) => d.phase === phase);
+            const phaseDays = phaseDaysAll.filter((d) => d.phase === phase);
             if (phaseDays.length === 0) return null;
             const phaseDone = phaseDays.filter((d) => state.completed?.[d.num]).length;
             return (

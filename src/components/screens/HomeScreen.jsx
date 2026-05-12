@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, ChevronDown, Coffee } from 'lucide-react';
+import { BookOpen, ChevronDown, Coffee, Instagram, ArrowRight } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
 import { DayCard } from '../ui/DayCard';
@@ -10,6 +10,7 @@ import { getMethod } from '../../data/methods';
 import { ZERIS } from '../../data/zerisInfo';
 import { GlossaryScreen } from './GlossaryScreen';
 import { RecipesScreen } from './RecipesScreen';
+import { ChallengeScreen } from './ChallengeScreen';
 
 const PHASES = ['Fundamentos', 'Variables', 'Los 4 fondos', 'Campeones', 'Cierre'];
 
@@ -17,6 +18,7 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
   const [glossaryOpen, setGlossaryOpen] = useState(false);
   const [recipesOpen, setRecipesOpen] = useState(false);
   const [switcherOpen, setSwitcherOpen] = useState(false);
+  const [challengeOpen, setChallengeOpen] = useState(false);
 
   const completedCount = Object.keys(state.completed || {}).length;
   const progress = (completedCount / 30) * 100;
@@ -37,6 +39,10 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
         }}
       />
     );
+  }
+
+  if (challengeOpen) {
+    return <ChallengeScreen onBack={() => setChallengeOpen(false)} />;
   }
 
   return (
@@ -148,6 +154,53 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
           <br />
           <span style={{ fontWeight: 700 }}>con {currentMethod?.id === 'orea' ? 'OREA' : currentMethod?.name || 'tu cafetera'}</span>
         </h1>
+      </div>
+
+      {/* Banner del reto en redes */}
+      <div style={{ padding: '0 20px 14px' }}>
+        <button
+          onClick={() => setChallengeOpen(true)}
+          style={{
+            width: '100%',
+            textAlign: 'left',
+            background: C.surface,
+            border: 'none',
+            borderRadius: 16,
+            padding: '14px 16px',
+            boxShadow: C.shadowOutSoft,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 14,
+            color: C.text,
+          }}
+        >
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              flexShrink: 0,
+              borderRadius: '50%',
+              background: C.surfaceMute,
+              boxShadow: C.shadowInSoft,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: C.text,
+            }}
+          >
+            <Instagram size={18} />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase' }}>
+              Reto en redes
+            </div>
+            <div style={{ fontSize: 13.5, color: C.text, fontWeight: 700, letterSpacing: '-0.2px', lineHeight: 1.25, marginTop: 2 }}>
+              Sube 5 fotos y consigue descuento
+            </div>
+          </div>
+          <ArrowRight size={16} style={{ color: C.textFaint, flexShrink: 0 }} />
+        </button>
       </div>
 
       {/* Progreso */}
