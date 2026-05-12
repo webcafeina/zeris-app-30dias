@@ -510,8 +510,22 @@ export function BrewRunningScreen({ day, onFinish }) {
         )}
       </div>
 
-      {/* Acciones */}
-      <div style={{ padding: '16px 20px 20px', display: 'flex', gap: 10 }}>
+      {/* Acciones sticky abajo */}
+      <div
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          padding: '14px 20px calc(16px + env(safe-area-inset-bottom)) 20px',
+          background: 'rgba(255, 255, 255, 0.86)',
+          backdropFilter: 'blur(18px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(18px) saturate(180%)',
+          marginTop: 14,
+          borderTop: `1px solid ${C.border}`,
+          display: 'flex',
+          gap: 10,
+          zIndex: 5,
+        }}
+      >
         <button
           onClick={togglePause}
           style={{

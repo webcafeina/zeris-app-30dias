@@ -126,7 +126,19 @@ export function TimelineScreen({ day, onBack, onStart }) {
         </div>
       </div>
 
-      <div style={{ padding: '0 20px' }}>
+      <div
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          padding: '14px 20px calc(16px + env(safe-area-inset-bottom)) 20px',
+          background: 'rgba(255, 255, 255, 0.86)',
+          backdropFilter: 'blur(18px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(18px) saturate(180%)',
+          marginTop: 24,
+          borderTop: `1px solid ${C.border}`,
+          zIndex: 5,
+        }}
+      >
         <button
           onClick={() => {
             warmUpVoice();
@@ -134,12 +146,12 @@ export function TimelineScreen({ day, onBack, onStart }) {
           }}
           style={{
             width: '100%',
-            background: `linear-gradient(135deg, ${C.accent}, ${C.accentBright})`,
+            background: C.accent,
             border: 'none',
-            borderRadius: 20,
-            padding: '20px',
+            borderRadius: 18,
+            padding: '18px',
             color: '#FFF',
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: 700,
             letterSpacing: '2px',
             display: 'flex',
@@ -150,10 +162,10 @@ export function TimelineScreen({ day, onBack, onStart }) {
             boxShadow: C.shadowStrong,
           }}
         >
-          <Play size={22} fill="#FFF" />
+          <Play size={20} fill="#FFF" />
           EMPEZAR EJERCICIO
         </button>
-        <div style={{ textAlign: 'center', fontSize: 11, color: C.textFaint, marginTop: 10 }}>
+        <div style={{ textAlign: 'center', fontSize: 11, color: C.textFaint, marginTop: 8 }}>
           Tendrás 3 segundos de cuenta atrás antes de empezar
         </div>
       </div>

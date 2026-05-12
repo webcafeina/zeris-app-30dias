@@ -609,55 +609,67 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
         </div>
       </div>
 
-      <button
-        onClick={finish}
+      {/* CTAs sticky abajo */}
+      <div
         style={{
-          width: '100%',
+          position: 'sticky',
+          bottom: 0,
           marginTop: 16,
-          background: C.text,
-          border: 'none',
-          borderRadius: 20,
-          padding: 18,
-          color: '#FFF',
-          fontSize: 15,
-          fontWeight: 700,
-          letterSpacing: '2px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 10,
-          cursor: 'pointer',
-          boxShadow: C.shadowStrong,
+          padding: '14px 0 calc(16px + env(safe-area-inset-bottom)) 0',
+          background: 'rgba(255, 255, 255, 0.86)',
+          backdropFilter: 'blur(18px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(18px) saturate(180%)',
+          borderTop: `1px solid ${C.border}`,
+          zIndex: 5,
         }}
       >
-        <Check size={20} strokeWidth={3} />
-        MARCAR DÍA COMO HECHO
-      </button>
+        <button
+          onClick={finish}
+          style={{
+            width: '100%',
+            background: C.text,
+            border: 'none',
+            borderRadius: 18,
+            padding: 18,
+            color: '#FFF',
+            fontSize: 15,
+            fontWeight: 700,
+            letterSpacing: '2px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            cursor: 'pointer',
+            boxShadow: C.shadowStrong,
+          }}
+        >
+          <Check size={20} strokeWidth={3} />
+          MARCAR DÍA COMO HECHO
+        </button>
 
-      <button
-        onClick={onRepeatLater}
-        style={{
-          width: '100%',
-          marginTop: 10,
-          background: C.glassStrong,
-          backdropFilter: 'blur(20px)',
-          border: `1px solid ${C.glassBorder}`,
-          borderRadius: 20,
-          padding: 16,
-          color: C.textMute,
-          fontSize: 14,
-          fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
-          cursor: 'pointer',
-          boxShadow: C.shadow,
-        }}
-      >
-        <Repeat size={18} />
-        Quiero repetir este ejercicio mañana
-      </button>
+        <button
+          onClick={onRepeatLater}
+          style={{
+            width: '100%',
+            marginTop: 10,
+            background: C.surface,
+            border: `1px solid ${C.border}`,
+            borderRadius: 18,
+            padding: 14,
+            color: C.textMute,
+            fontSize: 13,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            cursor: 'pointer',
+          }}
+        >
+          <Repeat size={16} />
+          Quiero repetir este ejercicio mañana
+        </button>
+      </div>
     </div>
   );
 }

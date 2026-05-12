@@ -107,8 +107,8 @@ h1, h2, h3 {
      en su propio borde, así que se ve más suave que un sólido. */
 .zen-orb {
   position: absolute;
-  width: 620px;
-  height: 620px;
+  width: 820px;
+  height: 820px;
   border-radius: 50%;
   opacity: 0.7;
   will-change: transform;
@@ -120,11 +120,11 @@ h1, h2, h3 {
    del timer y la chrome B&W. Los nombres de las clases se mantienen
    aunque el color haya cambiado para no tocar BackgroundOrbs.jsx. */
 
-/* Azul cielo suave */
+/* Café con leche / yema suave — un toque cálido para romper el azul */
 .zen-orb-peach {
-  background: radial-gradient(closest-side, #CFE0F2 0%, rgba(207, 224, 242, 0.4) 50%, transparent 80%);
-  top: -18%;
-  left: -18%;
+  background: radial-gradient(closest-side, #F5DDA6 0%, rgba(245, 221, 166, 0.42) 50%, transparent 80%);
+  top: -22%;
+  left: -22%;
 }
 
 /* Periwinkle (azul-lavanda) */

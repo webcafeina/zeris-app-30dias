@@ -283,8 +283,20 @@ export function PrepScreen({ day, onBack, onContinue }) {
         {checked.size} de {steps.length} listos
       </div>
 
-      {/* CTA */}
-      <div style={{ padding: '0 20px 20px' }}>
+      {/* CTA sticky abajo */}
+      <div
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          padding: '14px 20px calc(16px + env(safe-area-inset-bottom)) 20px',
+          background: 'rgba(255, 255, 255, 0.86)',
+          backdropFilter: 'blur(18px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(18px) saturate(180%)',
+          marginTop: 12,
+          borderTop: `1px solid ${C.border}`,
+          zIndex: 5,
+        }}
+      >
         <button
           onClick={() => {
             warmUpVoice();

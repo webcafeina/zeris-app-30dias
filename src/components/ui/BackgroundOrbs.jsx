@@ -13,44 +13,44 @@ export function BackgroundOrbs() {
     // para que el movimiento sea claramente perceptible.
     const setup = [
       {
-        // peach
+        // peach / cream — café con leche
         keyframes: [
           { transform: 'translate3d(0, 0, 0) scale(1)' },
-          { transform: 'translate3d(38vw, 32vh, 0) scale(1.22)' },
+          { transform: 'translate3d(42vw, 36vh, 0) scale(1.25)' },
           { transform: 'translate3d(0, 0, 0) scale(1)' },
         ],
-        duration: 7500,
+        duration: 5000,
         delay: 0,
       },
       {
-        // mint
+        // mint / periwinkle
         keyframes: [
           { transform: 'translate3d(0, 0, 0) scale(1)' },
-          { transform: 'translate3d(-34vw, 28vh, 0) scale(1.18)' },
+          { transform: 'translate3d(-38vw, 32vh, 0) scale(1.2)' },
           { transform: 'translate3d(0, 0, 0) scale(1)' },
         ],
-        duration: 9000,
-        delay: -2200,
+        duration: 6000,
+        delay: -1500,
       },
       {
         // lavender
         keyframes: [
           { transform: 'translate3d(0, 0, 0) scale(1)' },
-          { transform: 'translate3d(34vw, -30vh, 0) scale(1.28)' },
+          { transform: 'translate3d(36vw, -32vh, 0) scale(1.3)' },
           { transform: 'translate3d(0, 0, 0) scale(1)' },
         ],
-        duration: 10000,
-        delay: -5000,
+        duration: 6500,
+        delay: -3000,
       },
       {
         // sky
         keyframes: [
           { transform: 'translate3d(0, 0, 0) scale(1)' },
-          { transform: 'translate3d(-30vw, -34vh, 0) scale(1.18)' },
+          { transform: 'translate3d(-34vw, -38vh, 0) scale(1.2)' },
           { transform: 'translate3d(0, 0, 0) scale(1)' },
         ],
-        duration: 8000,
-        delay: -3600,
+        duration: 5500,
+        delay: -2400,
       },
     ];
 

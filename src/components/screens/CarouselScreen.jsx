@@ -136,7 +136,21 @@ export function CarouselScreen({ day, onBack, onContinue }) {
         )}
       </div>
 
-      <div style={{ padding: 20, display: 'flex', gap: 12 }}>
+      <div
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          padding: '14px 20px calc(18px + env(safe-area-inset-bottom)) 20px',
+          background: 'rgba(255, 255, 255, 0.86)',
+          backdropFilter: 'blur(18px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(18px) saturate(180%)',
+          display: 'flex',
+          gap: 12,
+          marginTop: 24,
+          borderTop: `1px solid ${C.border}`,
+          zIndex: 5,
+        }}
+      >
         <button
           onClick={prev}
           style={{
