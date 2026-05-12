@@ -1,12 +1,14 @@
 import { C } from '../../styles/colors';
 
-// Agua animada dentro de un círculo. Sube según `progress` (0..1).
-// Top ondulado con animación SMIL + burbujas ascendentes.
-// Pensado para anidarse dentro de CircularTimer durante pasos de vertido.
-export function WaterFill({ progress = 0, size = 200, urgency = false }) {
+// Agua animada dentro de un círculo. Sube según `progress` (0..1) — pensado
+// para mapearse al pourProgress (vertido activo): el agua sube exactamente
+// los segundos que dura el vertido y luego se queda estática al nivel final.
+// - `active`: si true, oleaje + burbujas; si false, agua quieta (vertido terminado).
+// - `urgency`: si true, tono rojizo (faltan pocos segundos).
+export function WaterFill({ progress = 0, size = 200, urgency = false, active = true }) {
   const p = Math.max(0, Math.min(1, progress));
   const waterTop = size * (1 - p);
-  const waveAmp = 6;
+  const waveAmp = active ? 6 : 0;
   const waveBase = waterTop;
 
   const wave1 = `M 0 ${waveBase} Q ${size * 0.25} ${waveBase - waveAmp} ${size * 0.5} ${waveBase} T ${size} ${waveBase} V ${size} H 0 Z`;
@@ -34,18 +36,21 @@ export function WaterFill({ progress = 0, size = 200, urgency = false }) {
       </defs>
 
       <g clipPath={`url(#water-circle-clip-${size})`}>
-        {/* Cuerpo del agua con borde ondulado animado */}
+        {/* Cuerpo del agua. Si active=true: borde ondulado animado.
+            Si active=false: línea plana, sin oleaje. */}
         <path d={wave1} fill={`url(#water-gradient-${size})`} style={{ transition: 'd 0.9s linear' }}>
-          <animate
-            attributeName="d"
-            values={`${wave1};${wave2};${wave1}`}
-            dur="2.4s"
-            repeatCount="indefinite"
-          />
+          {active && (
+            <animate
+              attributeName="d"
+              values={`${wave1};${wave2};${wave1}`}
+              dur="2.4s"
+              repeatCount="indefinite"
+            />
+          )}
         </path>
 
-        {/* Burbujas ascendentes (solo si hay agua suficiente) */}
-        {p > 0.05 && (
+        {/* Burbujas: solo mientras el vertido está activo y hay agua suficiente. */}
+        {active && p > 0.05 && (
           <>
             <circle cx={size * 0.32} r={3} fill="rgba(255,255,255,0.7)">
               <animate

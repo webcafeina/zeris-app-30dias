@@ -7,6 +7,7 @@ import { TIPS } from '../../data/tips';
 import { buildBrewPlan, pourDurationForStep, pourAmountForStep } from '../../lib/brewPlan';
 import { CircularTimer } from '../ui/CircularTimer';
 import { WaterFill } from '../ui/WaterFill';
+import { WaterStream } from '../ui/WaterStream';
 import { Hint } from '../ui/Hint';
 
 const ACTION_LABEL = {
@@ -219,93 +220,32 @@ export function BrewRunningScreen({ day, onFinish }) {
         </div>
       </div>
 
-      {/* Dos timers circulares lado a lado: VIERTE + ESPERA.
-          Ambos cuentan a la vez durante un paso de pour:
-            - VIERTE drena durante los N segundos del vertido (gramos / 5g/s).
-            - ESPERA drena durante el hueco completo hasta el siguiente paso.
-          Para pasos no-pour (swirl, rao, drain, dose) solo se renderiza ESPERA. */}
+      {/* Timer único (ESPERA) con la animación del agua dentro, sincronizada
+          al vertido. Sobre el ring cae un chorrito mientras se vierte.
+          - Anillo: cuenta atrás hasta el siguiente paso (tToNext).
+          - WaterFill: sube de 0 a 100% durante pourDuration y se queda
+            quieto al terminar el vertido (active=false freezing).
+          - WaterStream: gotas cayendo, solo mientras stillPouring. */}
       <div style={{ padding: '8px 20px 24px' }}>
         {nextStep ? (
-          <div
-            style={{
-              display: 'flex',
-              gap: 18,
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-            }}
-          >
-            {/* VIERTE — solo cuando hay pour real con duración > 0 */}
-            {isPour && pourDuration > 0 && (
-              <div style={{ flex: '0 1 150px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase' }}>
-                  Vierte
-                </div>
-                <CircularTimer
-                  progress={pourProgress}
-                  remaining={stillPouring ? pourLeft : null}
-                  size={140}
-                  stroke={10}
-                  dangerAt={2}
-                >
-                  <WaterFill progress={pourProgress} size={114} urgency={stillPouring && pourLeft <= 2} />
-                  <div
-                    style={{
-                      position: 'relative',
-                      zIndex: 2,
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '0 10px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 34,
-                        fontWeight: 200,
-                        letterSpacing: '-1.5px',
-                        lineHeight: 1,
-                        color: '#FFF',
-                        textShadow: '0 1px 3px rgba(30,90,143,0.5)',
-                        fontVariantNumeric: 'tabular-nums',
-                      }}
-                    >
-                      {stillPouring ? `${pourLeft}s` : '✓'}
-                    </div>
-                    {pourAmount > 0 && (
-                      <div
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 600,
-                          marginTop: 4,
-                          color: '#FFF',
-                          textShadow: '0 1px 2px rgba(30,90,143,0.4)',
-                          letterSpacing: '0.3px',
-                        }}
-                      >
-                        {pourAmount} g de agua
-                      </div>
-                    )}
-                  </div>
-                </CircularTimer>
-              </div>
-            )}
-
-            {/* ESPERA — visible siempre que haya un siguiente paso */}
-            <div style={{ flex: '0 1 150px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-              <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase' }}>
-                {isPour && pourDuration > 0 ? 'Espera' : ACTION_LABEL[currentStep?.action] || 'Espera'}
-              </div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ position: 'relative' }}>
+              <WaterStream active={stillPouring} urgency={stillPouring && pourLeft <= 2} />
               <CircularTimer
                 progress={stepProgress}
                 remaining={tToNext}
-                size={140}
-                stroke={10}
+                size={240}
+                stroke={13}
                 dangerAt={5}
               >
+                {isPour && pourDuration > 0 && (
+                  <WaterFill
+                    progress={pourProgress}
+                    size={212}
+                    urgency={stillPouring && pourLeft <= 2}
+                    active={stillPouring}
+                  />
+                )}
                 <div
                   style={{
                     position: 'relative',
@@ -316,34 +256,65 @@ export function BrewRunningScreen({ day, onFinish }) {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '0 10px',
+                    padding: '0 18px',
                     textAlign: 'center',
                   }}
                 >
                   <div
                     style={{
-                      fontSize: 34,
+                      fontSize: 9,
+                      letterSpacing: '2.5px',
+                      fontWeight: 700,
+                      color: isPour && pourProgress > 0.15 ? '#FFF' : C.textFaint,
+                      textShadow: isPour && pourProgress > 0.15 ? '0 1px 2px rgba(30,90,143,0.4)' : 'none',
+                      marginBottom: 4,
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {ACTION_LABEL[currentStep?.action] || 'Paso'}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 56,
                       fontWeight: 200,
-                      letterSpacing: '-1.5px',
+                      letterSpacing: '-2.5px',
                       lineHeight: 1,
-                      color: C.text,
+                      color: isPour && pourProgress > 0.3 ? '#FFF' : C.text,
+                      textShadow: isPour && pourProgress > 0.3 ? '0 1px 3px rgba(30,90,143,0.5)' : 'none',
                       fontVariantNumeric: 'tabular-nums',
+                      transition: 'color 0.35s ease',
                     }}
                   >
                     {tToNext}s
                   </div>
-                  <div
-                    style={{
-                      fontSize: 9,
-                      fontWeight: 700,
-                      letterSpacing: '1.5px',
-                      color: C.textFaint,
-                      marginTop: 4,
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    Siguiente paso
-                  </div>
+                  {stillPouring && pourLeft > 0 && (
+                    <div
+                      style={{
+                        fontSize: 11,
+                        marginTop: 5,
+                        fontWeight: 700,
+                        letterSpacing: '0.5px',
+                        color: '#FFF',
+                        textShadow: '0 1px 2px rgba(30,90,143,0.4)',
+                      }}
+                    >
+                      vertiendo · {pourLeft}s · {pourAmount} g
+                    </div>
+                  )}
+                  {!stillPouring && currentStep?.water && isPour && (
+                    <div
+                      style={{
+                        fontSize: 10,
+                        marginTop: 5,
+                        fontWeight: 600,
+                        letterSpacing: '0.3px',
+                        color: '#FFF',
+                        textShadow: '0 1px 2px rgba(30,90,143,0.4)',
+                      }}
+                    >
+                      hasta {currentStep.water} g de agua
+                    </div>
+                  )}
                 </div>
               </CircularTimer>
             </div>

@@ -35,6 +35,16 @@
   50%      { transform: scale(1.03); }
 }
 
+/* Chorrito cayendo: la gota nace ~3px por debajo del top y desciende
+   hasta el inicio del ring (~70px). Aparece y desaparece para que se vea
+   "caída", no un palote fijo. */
+@keyframes waterDropFall {
+  0%   { transform: translateY(0) scaleY(0.8); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 0.9; }
+  100% { transform: translateY(56px) scaleY(1.1); opacity: 0; }
+}
+
 /* Movimientos para los orbes del fondo zen.
    Uso translate3d (no translate) para forzar capa GPU y evitar que
    Safari/Chrome móvil throttleen la animación cuando la página
