@@ -53,33 +53,10 @@
   100% { transform: translateY(56px) scaleY(1.1); opacity: 0; }
 }
 
-/* Movimientos para los orbes del fondo zen.
-   Uso translate3d (no translate) para forzar capa GPU y evitar que
-   Safari/Chrome móvil throttleen la animación cuando la página
-   parece idle. */
-@keyframes orbDriftPeach {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(38vw, 30vh, 0) scale(1.2); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-@keyframes orbDriftMint {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(-34vw, 26vh, 0) scale(1.15); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-@keyframes orbDriftLavender {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(32vw, -28vh, 0) scale(1.25); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-@keyframes orbDriftSky {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(-28vw, -32vh, 0) scale(1.15); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
+/* Las animaciones de los orbes vienen via Web Animations API en
+   ui/BackgroundOrbs.jsx — no usamos @keyframes CSS para los orbes,
+   porque iOS Safari throttlea las CSS animations de elementos blurred
+   de fondo cuando la página está "idle". WAAPI evita ese throttling. */
 
 html, body, #root {
   margin: 0;
