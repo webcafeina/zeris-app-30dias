@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, ChevronDown } from 'lucide-react';
+import { BookOpen, ChevronDown, Coffee } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
 import { DayCard } from '../ui/DayCard';
@@ -57,26 +57,46 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
               ZERI'S COFFEE
             </div>
           </div>
-          <button
-            onClick={() => setGlossaryOpen(true)}
-            aria-label="Abrir glosario"
-            style={{
-              background: C.surface,
-              border: 'none',
-              borderRadius: '50%',
-              width: 38,
-              height: 38,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: C.text,
-              cursor: 'pointer',
-              flexShrink: 0,
-              boxShadow: C.shadowOutSoft,
-            }}
-          >
-            <BookOpen size={16} strokeWidth={2} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            <button
+              onClick={() => setRecipesOpen(true)}
+              aria-label="Abrir libro de recetas"
+              style={{
+                background: C.surface,
+                border: 'none',
+                borderRadius: '50%',
+                width: 38,
+                height: 38,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: C.text,
+                cursor: 'pointer',
+                boxShadow: C.shadowOutSoft,
+              }}
+            >
+              <Coffee size={16} strokeWidth={2} />
+            </button>
+            <button
+              onClick={() => setGlossaryOpen(true)}
+              aria-label="Abrir glosario"
+              style={{
+                background: C.surface,
+                border: 'none',
+                borderRadius: '50%',
+                width: 38,
+                height: 38,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: C.text,
+                cursor: 'pointer',
+                boxShadow: C.shadowOutSoft,
+              }}
+            >
+              <BookOpen size={16} strokeWidth={2} />
+            </button>
+          </div>
         </div>
 
         {/* Pill de método: tap → abre MethodSwitcher */}
