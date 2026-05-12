@@ -3,6 +3,7 @@ import { X, BookOpen, RefreshCcw } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { METHODS, getMethod } from '../../data/methods';
 import { MethodIcon } from './MethodIcon';
+import { BackupSection } from './BackupSection';
 
 // Bottom sheet que se abre desde el header de HomeScreen.
 // Sirve para:
@@ -217,6 +218,9 @@ export function MethodSwitcher({
               </div>
             </div>
           </button>
+
+          {/* Backup / restore — red de seguridad mientras no haya backend. */}
+          <BackupSection />
         </div>
       </div>
     </div>

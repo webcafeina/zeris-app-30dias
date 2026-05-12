@@ -1,9 +1,12 @@
-import { Check, ArrowUpRight } from 'lucide-react';
+import { Check, ArrowUpRight, Repeat } from 'lucide-react';
 import { C } from '../../styles/colors';
 
 // DayCard editorial: número grande a la izquierda, título en bold, metadatos sutiles.
 // Sombra azulada que lo separa del fondo; presionado → sombra hundida.
-export function DayCard({ day, completed, onClick }) {
+// `attemptsCount` (opcional): si > 0, muestra un pill "Nº intentos" en la fila
+//   de metadatos para que el usuario vea cuántas catas tiene de ese día sin
+//   tener que entrar al diario.
+export function DayCard({ day, completed, attemptsCount = 0, onClick }) {
   return (
     <button
       onClick={onClick}
@@ -77,6 +80,25 @@ export function DayCard({ day, completed, onClick }) {
             {day.type === 'brew' && (
               <span style={{ fontSize: 11, color: C.textMute, fontVariantNumeric: 'tabular-nums' }}>
                 {day.coffee} g · {day.water} g · {day.temp} °C
+              </span>
+            )}
+            {attemptsCount > 0 && (
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  fontSize: 10,
+                  padding: '2px 7px',
+                  borderRadius: 8,
+                  background: C.surfaceMute,
+                  color: C.textMute,
+                  fontWeight: 700,
+                  letterSpacing: '0.3px',
+                }}
+              >
+                <Repeat size={10} />
+                {attemptsCount} {attemptsCount === 1 ? 'cata' : 'catas'}
               </span>
             )}
           </div>

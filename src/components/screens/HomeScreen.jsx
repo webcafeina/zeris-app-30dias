@@ -302,14 +302,19 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
                   {phaseDone}/{phaseDays.length}
                 </span>
               </div>
-              {phaseDays.map((day) => (
-                <DayCard
-                  key={day.num}
-                  day={day}
-                  completed={!!state.completed?.[day.num]}
-                  onClick={() => onDayClick(day.num)}
-                />
-              ))}
+              {phaseDays.map((day) => {
+                const attempts = state.logs?.[day.num];
+                const attemptsCount = Array.isArray(attempts) ? attempts.length : (attempts ? 1 : 0);
+                return (
+                  <DayCard
+                    key={day.num}
+                    day={day}
+                    completed={!!state.completed?.[day.num]}
+                    attemptsCount={attemptsCount}
+                    onClick={() => onDayClick(day.num)}
+                  />
+                );
+              })}
             </div>
           );
         })}

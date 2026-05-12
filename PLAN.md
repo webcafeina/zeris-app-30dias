@@ -1,7 +1,10 @@
-# Plan — 30 días con OREA
+# Plan — 30 días con Zeri's
 
-Roadmap de la app móvil web complementaria a la guía PDF de Zeri's Coffee.
+App móvil web complementaria a la guía PDF de Zeri's Coffee.
 Marca tareas con `[x]` a medida que se completan.
+
+🌐 **Producción**: https://zeris-app-30dias.pages.dev
+🧪 **Dev local**: `npm run dev` → http://localhost:5173
 
 ---
 
@@ -13,91 +16,142 @@ Dos formas, complementarias:
 ```bash
 npm run dev
 ```
-Abre `http://localhost:5173` en el navegador del portátil. Los cambios se ven al instante.
 
 **2. En móvil real (preview pública por cada push):**
-- Cada push a GitHub dispara un build en **Cloudflare Pages**.
-- Cloudflare genera una URL pública (ej. `<commit>.zeris-app-30dias.pages.dev`).
-- Abrir esa URL desde el iPhone/Android → instalar como PWA → testear voz, beeps, offline, instalación.
-- La rama `main` actualiza la URL de producción; cualquier otra rama genera su propia preview.
-
-> La preview pública es **crítica** porque Web Speech API, instalación PWA y service worker solo se comportan bien en hardware real, no en el simulador.
+- Cada push a `main` actualiza https://zeris-app-30dias.pages.dev
+- Cada push a otra rama genera una URL preview única en Cloudflare Pages
+- Abrir esa URL desde el iPhone/Android → instalar como PWA
 
 ---
 
-## Fase 0 — Bootstrap y repo
+## Estado del producto (mayo 2026)
 
-- [x] Inicializar Vite + React 18 + `vite-plugin-pwa`
-- [x] Importar `App.jsx` original y PDF como referencia (`files-prompt/`)
-- [x] Extraer `styles/`, `lib/` y `data/` desde `App.jsx`
-- [x] Extraer primitivas UI (`GlassCard`, `DayCard`, `ParamChip`, `TasteSlider`)
-- [x] Extraer pantallas (`Home`, `Carousel`, `Timeline`, `Countdown`, `BrewRunning`, `PostBrew`, `NonBrew`)
-- [x] Añadir logo Zeri's + iconos PWA (192/512)
-- [x] Redactar `README.md` inicial
-- [x] Crear repo en GitHub (`webcafeina/zeris-app-30dias`, público)
-- [x] Configurar `gh` CLI y push inicial a `origin/main`
+### ✅ Listo y desplegado
 
-## Fase 1 — Higiene de repo
+**Infraestructura**
+- Vite + React 18 + vite-plugin-pwa
+- GitHub `webcafeina/zeris-app-30dias`, Cloudflare Pages, SW con autoUpdate + skipWaiting
+- Build limpio, sin warnings
 
-- [x] Añadir `.claude/` al `.gitignore` (`node_modules/` y `dist/` ya estaban)
-- [x] Commitear `package-lock.json`
-- [x] Conectar repo a Cloudflare Pages (ver Fase 4)
-- [ ] Configurar protección de `main` (require PR, no force-push) en GitHub
-- [ ] Crear branch de trabajo `dev` y flujo PR → main
+**Selector de método (entrada)**
+- 7 métodos: OREA (activo), V60, AeroPress, Moka, Prensa francesa, Chemex, Espresso
+- Foto hero de la OREA, descripción + tagline Zeri's
+- Bloque promo con código `CAFETAZO10`
+- Glosario y libro de recetas accesibles desde aquí también
 
-## Fase 2 — Core funcional (estado actual a auditar)
+**Navegación entre métodos**
+- Pill "Reto activo" en Home → abre MethodSwitcher (bottom sheet)
+- Estado persistido **por método** (cada uno con su progreso independiente)
+- Switcher incluye: cambiar método, ver todas las recetas, volver al selector inicial,
+  **exportar/importar backup** del progreso completo
 
-Antes de marcar, validar en navegador que cada flujo funciona end-to-end.
+**Glosario**
+- 15 términos del oficio (bloom, swirl, rao spin, drawdown, ratio, FAST, etc.)
+- Inline `<Hint>` con `?` que abre un bottom sheet con la definición
+- Pantalla completa de glosario desde Home
 
-- [ ] **Home**: progreso global, retomar día actual, acceso a timeline
-- [ ] **Carousel**: navegación entre los 30 días con `DayCard`
-- [ ] **Timeline**: vista vertical de los 30 días con estado completado/pendiente
-- [ ] **Countdown**: cuenta atrás previa al brew (con beeps)
-- [ ] **BrewRunning**: timer guiado paso a paso + anuncios por voz (Web Speech)
-- [ ] **PostBrew**: cata con `TasteSlider` + motor `diagnose.js`
-- [ ] **NonBrew**: días de cata / reflexión sin extracción
-- [ ] Persistencia en `localStorage` (avance, notas, catas) verificada
-- [ ] Dictado de notas funcional en Android e iOS
+**Libro de recetas**
+- Toggle "Por autor" / "Por curso"
+- Vista por autor agrupa por barista (Hoffmann, Hedrick, Kasuya, Wölfl, Rao, D'Ottavio, etc.)
+- Buscador: filtra por título, autor, gramaje, ratio, fondo, temp
+- Ficha esquemática: parámetros + tabla de vertidos + CTA "Empezar ejercicio"
 
-## Fase 3 — PWA y experiencia móvil
+**Cafés recomendados**
+- Card en TimelineScreen con café Zeri's que casa con el ejercicio del día
+- Datos PLACEHOLDER (4 cafés inventados pero perfilados a tipos reales)
+- Link a la tienda; estructura preparada para conectar con WooCommerce REST
 
-- [ ] Verificar instalación en Android (Chrome) — banner "Añadir a pantalla de inicio"
-- [ ] Verificar instalación en iOS (Safari) — meta tags `apple-touch-icon`, `apple-mobile-web-app-*`
-- [ ] Probar offline (service worker sirviendo `dist/` cacheado)
-- [ ] Splash screens iOS (opcional, según calidad deseada)
-- [ ] Revisar viewport, safe-area-inset, sin scroll horizontal
-- [ ] Lighthouse PWA score ≥ 90
+**Flujo del brew**
+1. **Carousel educativo** del día (slides con texto, fotos OREA, vídeo de YouTube cuando aplica, BaristaCard con redes sociales del autor de la receta)
+2. **Timeline** del día (objetivo, parámetros, café recomendado, plan paso a paso)
+3. **PrepScreen** ("Pasos previos · sin cronómetro"): 9 pasos checkables que incluyen
+   montar la cafetera sobre la báscula, tarar, pesar café, moler con click count,
+   verificar peso, re-tarar, calentar agua
+4. **Countdown** 3-2-1 → "Empecemos a hacer café"
+5. **BrewRunning** con cronómetro:
+   - Anillo circular con gradiente azul (igual que el agua), drain visible
+   - Etiqueta dinámica VIERTE/SWIRL/RAO SPIN/CAFÉ AL FILTRO → ESPERA cuando termina la acción
+   - Subtitulo con verbo en gerundio + segundos + gramos para vertidos
+   - Animación de agua subiendo durante el vertido + chorrito cayendo
+   - En últimos 5s: anillo + card se desvanecen (opacity → 0)
+   - Card "AHORA · PASO" rebota (cardPum) al cambiar de paso
+   - Drawdown centrado, voz "Pulsa en Terminar" cuando supera target time
+   - Voice tips ambientales durante esperas largas (pool por acción)
+6. **PostBrew** con cata (sliders + defectos + notas con dictado) +
+   "Comparte tu cafetazo" con caption pre-rellenado para Instagram + toast "Texto copiado"
 
-## Fase 4 — CI/CD y despliegue
+**Mis catas (Diario)**
+- Pantalla "Mis catas" en cabecera de Home
+- Logs por día, ORDENADOS por última actividad
+- Cada día: tarjeta colapsable con TODOS los intentos (un día puede tener 5-6 catas)
+- Cada intento: fecha, tiempo, rating, sliders de cata con delta vs anterior, defectos, notas
+- CTA "Repetir este ejercicio" en cada tarjeta
 
-- [x] **Cloudflare Pages**: conectado a `webcafeina/zeris-app-30dias`
-  - Build command: `npm run build`
-  - Output directory: `dist`
-  - Variable de entorno: `NODE_VERSION=20`
-  - Auto preview deployments en cada push (no-`main`) → URL única por commit
-  - Production deployment en cada push a `main`
-- [x] **URL de producción**: https://zeris-app-30dias.pages.dev (HTTP 200 verificado)
-- [ ] Configurar dominio (¿`30dias.zeriscoffee.com`? confirmar con Zeri's)
-- [ ] Verificar HTTPS y headers de seguridad
-- [ ] Smoke test en producción desde móvil real
-- [ ] GitHub Action de build en PRs (opcional — Cloudflare ya hace build, esto es redundante salvo que queramos test runner)
+**Reto en redes**
+- Banner en Home → ChallengeScreen
+- 30 fotos en 30 días (mínimo 3 por subida) → descuento en panel de usuario zeriscoffee.com
+- Hashtag `#RetoZerisCoffee` + @zeriscoffeeroaster
+- 3 cards visuales: tu método + paquete Zeri's + la app en pantalla
 
-## Fase 5 — Pulido pre-lanzamiento
+**Identidad visual**
+- B&W editorial estilo Ineffable
+- Fondo zen con 4 orbes pastel azul-violeta + un toque cálido café con leche, animados con
+  Web Animations API (evita el throttling de iOS Safari)
+- Sin urgencia roja — todo va en azules y se desvanece por opacidad
+- CTAs sticky abajo con backdrop-blur + safe-area-inset para el home bar de iPhone
+- Fotos hiperrealistas OREA en MethodScreen, HomeScreen, PrepScreen, CarouselScreen, RecipesScreen
+- Tipografía Inter, mucho aire, sombras verde-lima/gris-azulado para lift
 
-- [ ] QA cruzado: iPhone Safari, Android Chrome, desktop responsive
-- [ ] Revisión de textos (copy) con Zeri's
-- [ ] Accesibilidad básica: contraste, focus visible, labels en sliders
+**Datos**
+- 30 días completos en `data/days.js` con carouseles, parámetros, pasos
+- Cada día puede declarar `coffeeId` (recomendación), `baristaId`, slide.photoId
+- 8 baristas con bio, foto (placeholder), web, IG, YouTube, Twitter
+- `lib/brewPlan.js`: helpers para pour duration (5 g/s), action duration
+  (swirl 5s, rao 10s, dose 10s), inserción automática del paso DOSIS al inicio
+
+**Persistencia**
+- localStorage por método + migración de formato antiguo
+- **Backup JSON manual** (export/import) desde MethodSwitcher hasta que tengamos backend
+
+---
+
+## ⏳ Pendientes priorizados
+
+### Cosas que solo NECESITAN datos tuyos (rápido cuando los tengamos)
+
+- [ ] **Fotos reales de baristas** → reemplazar avatares con iniciales en
+      `public/baristas/<id>.jpg`
+- [ ] **Catálogo real de cafés Zeri's** → reemplazar `data/coffees.js` con
+      productos reales + URLs de tienda + fotos de paquete
+- [ ] **Investigación profunda de vídeos** por día (30 vídeos verificados de
+      baristas reconocidos). Hecho solo para Wölfl (Día 24). Quedan 29 días por
+      revisar uno a uno.
+
+### Backend + auth (decisión técnica pendiente)
+
+- [ ] **Auth contra zeriscoffee.com (WordPress)** — comparar usuarios entre la app
+      y la web. Opciones: JWT, magic link, OAuth WP, Google/Apple SSO.
+- [ ] **Backend para persistencia cross-device**: Cloudflare Workers + KV/D1.
+      Estado del reto, fotos subidas, validación del reto social,
+      asignación de descuentos automáticos en zeriscoffee.com.
+- [ ] **Integración WooCommerce REST API** para cafés en vivo.
+
+### Otros métodos (V60, AeroPress, Moka, Francesa, Chemex, Espresso)
+
+- [ ] Crear curva de 30 días por método. Hoy solo OREA tiene contenido.
+      Cuando arrancamos otro, hay que diseñar el currículum específico
+      (cada uno con su pedagogía).
+
+### UX / pulido menor
+
+- [ ] Protección de `main` en GitHub (PR required, no force-push)
+- [ ] Branch `dev` y flujo PR
+- [ ] Lighthouse PWA score ≥ 90 (verificar)
+- [ ] Splash screens iOS (opcional)
 - [ ] Analítica ligera (Plausible / Cloudflare Web Analytics) — opt-in
-- [ ] Página `/about` o footer con créditos (Zeri's + Webcafeína)
-
-## Fase 6 — Post-lanzamiento (backlog)
-
-- [ ] Compartir progreso (screenshot/share API)
-- [ ] Exportar notas a PDF/email
-- [ ] Modo claro/oscuro automático
-- [ ] Soporte multiidioma (ES → EN)
-- [ ] Variantes para otras cafeteras (V60, Kalita…)
+- [ ] Página `/about` o footer con créditos
+- [ ] Auditoría a11y básica: contraste, focus, labels en sliders
 
 ---
 
-**Estado actual:** Infraestructura lista. App desplegada en https://zeris-app-30dias.pages.dev. Próximo: auditoría funcional de pantallas (Fase 2).
+**Estado actual**: app totalmente funcional en local + producción, con flujo completo OREA y diario de catas. Pendientes principales son **contenido real (cafés, fotos, vídeos)** y **decisión de backend/auth** para persistencia cross-device y validación del reto social.
