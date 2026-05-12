@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, ChevronDown, Coffee, Instagram, ArrowRight } from 'lucide-react';
+import { BookOpen, ChevronDown, Coffee, Instagram, ArrowRight, Notebook } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
 import { DayCard } from '../ui/DayCard';
@@ -13,6 +13,7 @@ import { OREA_PHOTOS } from '../../data/photos';
 import { GlossaryScreen } from './GlossaryScreen';
 import { RecipesScreen } from './RecipesScreen';
 import { ChallengeScreen } from './ChallengeScreen';
+import { LogsScreen } from './LogsScreen';
 
 const PHASES = ['Fundamentos', 'Variables', 'Los 4 fondos', 'Campeones', 'Cierre'];
 
@@ -21,6 +22,7 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
   const [recipesOpen, setRecipesOpen] = useState(false);
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const [challengeOpen, setChallengeOpen] = useState(false);
+  const [logsOpen, setLogsOpen] = useState(false);
 
   const completedCount = Object.keys(state.completed || {}).length;
   const progress = (completedCount / 30) * 100;
@@ -47,6 +49,19 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
     return <ChallengeScreen onBack={() => setChallengeOpen(false)} />;
   }
 
+  if (logsOpen) {
+    return (
+      <LogsScreen
+        state={state}
+        onBack={() => setLogsOpen(false)}
+        onDayClick={(num) => {
+          setLogsOpen(false);
+          onDayClick(num);
+        }}
+      />
+    );
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: C.bg, paddingBottom: 32 }}>
       {/* Header: marca + pill método + glosario */}
@@ -66,6 +81,25 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            <button
+              onClick={() => setLogsOpen(true)}
+              aria-label="Mis catas"
+              style={{
+                background: C.surface,
+                border: 'none',
+                borderRadius: '50%',
+                width: 38,
+                height: 38,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: C.text,
+                cursor: 'pointer',
+                boxShadow: C.shadowOutSoft,
+              }}
+            >
+              <Notebook size={16} strokeWidth={2} />
+            </button>
             <button
               onClick={() => setRecipesOpen(true)}
               aria-label="Abrir libro de recetas"

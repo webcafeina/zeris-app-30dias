@@ -7,20 +7,48 @@ const METHOD_KEY = 'zeris.selectedMethod';
 
 const emptyMethodState = () => ({ completed: {}, logs: {} });
 
+// Convierte cada entrada de `logs` a array de intentos. Pre-migración
+// guardábamos un único objeto por día (sobrescribía al repetir el ejercicio);
+// ahora cada intento queda registrado para poder comparar evoluciones.
+const normalizeLogs = (logs) => {
+  if (!logs || typeof logs !== 'object') return {};
+  const out = {};
+  for (const [k, v] of Object.entries(logs)) {
+    if (Array.isArray(v)) {
+      out[k] = v;
+    } else if (v && typeof v === 'object') {
+      out[k] = [v]; // legacy: un solo intento, lo envolvemos
+    }
+  }
+  return out;
+};
+
 export const loadState = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { methods: {} };
     const parsed = JSON.parse(raw);
-    // Migración: formato antiguo { completed, logs } → { methods: { orea: { completed, logs } } }
+    // Migración 1: formato antiguo { completed, logs } sin métodos →
+    // { methods: { orea: { completed, logs } } }
     if (parsed && parsed.completed !== undefined && !parsed.methods) {
       return {
         methods: {
-          orea: { completed: parsed.completed || {}, logs: parsed.logs || {} },
+          orea: { completed: parsed.completed || {}, logs: normalizeLogs(parsed.logs) },
         },
       };
     }
-    return parsed.methods ? parsed : { methods: parsed || {} };
+    // Migración 2: para cada método, asegurar que logs[day] sea array.
+    if (parsed.methods) {
+      const next = { methods: {} };
+      for (const [mid, ms] of Object.entries(parsed.methods)) {
+        next.methods[mid] = {
+          completed: ms?.completed || {},
+          logs: normalizeLogs(ms?.logs),
+        };
+      }
+      return next;
+    }
+    return { methods: {} };
   } catch {
     return { methods: {} };
   }

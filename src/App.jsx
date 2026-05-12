@@ -77,11 +77,27 @@ export default function App() {
     });
   };
 
+  // Cada vez que el usuario termina (o re-hace) un ejercicio, APPENDEAMOS
+  // un nuevo intento a logs[dayNum] en lugar de sobrescribir. Así el
+  // usuario puede repetir el mismo día varias veces y conservar las notas
+  // de cata de cada intento (para comparar evolución).
+  const appendLog = (logsForDay, entry) => {
+    const arr = Array.isArray(logsForDay) ? logsForDay : (logsForDay ? [logsForDay] : []);
+    return [
+      ...arr,
+      {
+        ...entry,
+        attemptNumber: arr.length + 1,
+        timestamp: entry?.timestamp || Date.now(),
+      },
+    ];
+  };
+
   const handleComplete = (dayNum, log) => {
     updateMethodState((current) => ({
       ...current,
       completed: { ...current.completed, [dayNum]: true },
-      logs: { ...current.logs, [dayNum]: log },
+      logs: { ...current.logs, [dayNum]: appendLog(current.logs?.[dayNum], log) },
     }));
     handleBackHome();
   };
@@ -89,7 +105,10 @@ export default function App() {
   const handleRepeatLater = (dayNum, log) => {
     updateMethodState((current) => ({
       ...current,
-      logs: { ...current.logs, [dayNum]: { ...log, repeatRequested: true } },
+      logs: {
+        ...current.logs,
+        [dayNum]: appendLog(current.logs?.[dayNum], { ...log, repeatRequested: true }),
+      },
     }));
     handleBackHome();
   };
