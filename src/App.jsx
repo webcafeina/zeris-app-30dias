@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { DAYS } from './data/days';
-import { loadState, saveState } from './lib/storage';
+import {
+  loadState,
+  saveState,
+  getSelectedMethod,
+  setSelectedMethod as persistMethod,
+  clearSelectedMethod,
+} from './lib/storage';
 import { HomeScreen } from './components/screens/HomeScreen';
 import { CarouselScreen } from './components/screens/CarouselScreen';
 import { TimelineScreen } from './components/screens/TimelineScreen';
@@ -9,9 +15,11 @@ import { CountdownScreen } from './components/screens/CountdownScreen';
 import { BrewRunningScreen } from './components/screens/BrewRunningScreen';
 import { PostBrewScreen } from './components/screens/PostBrewScreen';
 import { NonBrewScreen } from './components/screens/NonBrewScreen';
+import { MethodScreen } from './components/screens/MethodScreen';
 
 export default function App() {
   const [state, setState] = useState(loadState);
+  const [method, setMethod] = useState(getSelectedMethod);
   const [activeDayNum, setActiveDayNum] = useState(null);
   const [subScreen, setSubScreen] = useState('carousel');
   const [brewElapsed, setBrewElapsed] = useState(0);
@@ -19,6 +27,25 @@ export default function App() {
   useEffect(() => {
     saveState(state);
   }, [state]);
+
+  // Selector de método: si no hay ninguno guardado, mostramos la pantalla inicial.
+  if (!method) {
+    return (
+      <MethodScreen
+        onSelect={(id) => {
+          persistMethod(id);
+          setMethod(id);
+        }}
+      />
+    );
+  }
+
+  const handleChangeMethod = () => {
+    clearSelectedMethod();
+    setMethod(null);
+    setActiveDayNum(null);
+    setSubScreen('carousel');
+  };
 
   const handleSelectDay = (num) => {
     setActiveDayNum(num);
@@ -49,7 +76,7 @@ export default function App() {
   };
 
   if (activeDayNum === null) {
-    return <HomeScreen state={state} onDayClick={handleSelectDay} />;
+    return <HomeScreen state={state} onDayClick={handleSelectDay} onChangeMethod={handleChangeMethod} />;
   }
 
   const day = DAYS.find((d) => d.num === activeDayNum);

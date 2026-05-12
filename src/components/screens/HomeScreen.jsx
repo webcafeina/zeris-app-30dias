@@ -8,7 +8,7 @@ import { GlossaryScreen } from './GlossaryScreen';
 
 const PHASES = ['Fundamentos', 'Variables', 'Los 4 fondos', 'Campeones', 'Cierre'];
 
-export function HomeScreen({ state, onDayClick }) {
+export function HomeScreen({ state, onDayClick, onChangeMethod }) {
   const [glossaryOpen, setGlossaryOpen] = useState(false);
   const completedCount = Object.keys(state.completed).length;
   const progress = (completedCount / 30) * 100;
@@ -104,8 +104,29 @@ export function HomeScreen({ state, onDayClick }) {
         })}
       </div>
 
-      <div style={{ textAlign: 'center', color: C.textFaint, fontSize: 10, letterSpacing: '2px', marginTop: 12 }}>
-        ZERISCOFFEE.COM
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginTop: 16 }}>
+        {onChangeMethod && (
+          <button
+            onClick={onChangeMethod}
+            style={{
+              background: C.surface,
+              border: 'none',
+              borderRadius: 14,
+              padding: '8px 16px',
+              fontSize: 11,
+              letterSpacing: '1.5px',
+              fontWeight: 700,
+              color: C.textMute,
+              cursor: 'pointer',
+              boxShadow: C.shadowOutSoft,
+            }}
+          >
+            CAMBIAR DE MÉTODO
+          </button>
+        )}
+        <div style={{ textAlign: 'center', color: C.textFaint, fontSize: 10, letterSpacing: '2px' }}>
+          ZERISCOFFEE.COM
+        </div>
       </div>
     </div>
   );
