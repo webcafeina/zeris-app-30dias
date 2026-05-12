@@ -1,20 +1,35 @@
 import { useState } from 'react';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, List } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
 import { GlassCard } from '../ui/GlassCard';
 import { DayCard } from '../ui/DayCard';
 import { GlossaryScreen } from './GlossaryScreen';
+import { RecipesScreen } from './RecipesScreen';
 
 const PHASES = ['Fundamentos', 'Variables', 'Los 4 fondos', 'Campeones', 'Cierre'];
 
 export function HomeScreen({ state, onDayClick, onChangeMethod }) {
   const [glossaryOpen, setGlossaryOpen] = useState(false);
+  const [recipesOpen, setRecipesOpen] = useState(false);
   const completedCount = Object.keys(state.completed).length;
   const progress = (completedCount / 30) * 100;
 
   if (glossaryOpen) {
     return <GlossaryScreen onBack={() => setGlossaryOpen(false)} />;
+  }
+
+  if (recipesOpen) {
+    return (
+      <RecipesScreen
+        state={state}
+        onBack={() => setRecipesOpen(false)}
+        onDayClick={(num) => {
+          setRecipesOpen(false);
+          onDayClick(num);
+        }}
+      />
+    );
   }
 
   return (

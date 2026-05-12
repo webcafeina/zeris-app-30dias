@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { C } from '../../styles/colors';
 import { formatTime } from '../../lib/format';
 import { beep } from '../../lib/audio';
-import { speak } from '../../lib/voice';
+import { speak, speakTip } from '../../lib/voice';
+import { TIPS } from '../../data/tips';
 import { CircularTimer } from '../ui/CircularTimer';
 import { WaterFill } from '../ui/WaterFill';
 import { Hint } from '../ui/Hint';
@@ -32,6 +33,15 @@ export function BrewRunningScreen({ day, onFinish }) {
   const announcedRef = useRef(new Set());
   const preAnnouncedRef = useRef(new Set());
   const intervalRef = useRef(null);
+  const tipTimersRef = useRef([]);
+  const spokenTipsRef = useRef(new Set());
+  const voiceOnRef = useRef(voiceOn);
+  const phaseRef = useRef(phase);
+
+  // Refs en sync para que el callback de los timers tenga el valor más reciente
+  // sin reinstalar los timeouts cada vez que cambia voiceOn/phase.
+  useEffect(() => { voiceOnRef.current = voiceOn; }, [voiceOn]);
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
 
   const steps = day.steps || [];
   const targetMin = day.targetTime?.[0] || 150;
@@ -94,6 +104,44 @@ export function BrewRunningScreen({ day, onFinish }) {
   })();
 
   const togglePause = () => setPhase((p) => (p === 'running' ? 'paused' : 'running'));
+
+  // Scheduler de tips de voz durante los waits del brew.
+  // Se reinicia al cambiar de paso. Programa hasta 2 tips por paso (a +8s y +22s)
+  // siempre que el paso dure lo suficiente. speakTip() respeta lo que se esté
+  // hablando — si voice está ocupada con un anuncio de paso, el tip se descarta.
+  useEffect(() => {
+    // Limpia los timers del paso anterior
+    tipTimersRef.current.forEach((t) => clearTimeout(t));
+    tipTimersRef.current = [];
+
+    if (!currentStep || !nextStep) return;
+    const stepDur = nextStep.at - currentStep.at;
+    if (stepDur < 18) return; // muy corto, no programa tips
+
+    const fireTip = () => {
+      if (phaseRef.current !== 'running' || !voiceOnRef.current) return;
+      const pool = [...(TIPS[currentStep.action] || []), ...TIPS.general];
+      const unspoken = pool.filter((t) => !spokenTipsRef.current.has(t));
+      const list = unspoken.length > 0 ? unspoken : pool;
+      const tip = list[Math.floor(Math.random() * list.length)];
+      spokenTipsRef.current.add(tip);
+      speakTip(tip, voiceOnRef.current);
+    };
+
+    // Primer tip a +8s. Margen suficiente tras el anuncio del paso.
+    tipTimersRef.current.push(setTimeout(fireTip, 8000));
+
+    // Segundo tip a +22s si el paso es lo bastante largo
+    // (deja 8s de margen antes del pre-anuncio a -10s del siguiente).
+    if (stepDur >= 30) {
+      tipTimersRef.current.push(setTimeout(fireTip, 22000));
+    }
+
+    return () => {
+      tipTimersRef.current.forEach((t) => clearTimeout(t));
+      tipTimersRef.current = [];
+    };
+  }, [currentIdx, currentStep, nextStep]);
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', flexDirection: 'column' }}>
