@@ -348,17 +348,17 @@ export function BrewRunningScreen({ day, onFinish }) {
                   </div>
                   <div
                     style={{
-                      fontSize: 56,
+                      fontSize: 88,
                       fontWeight: 200,
-                      letterSpacing: '-2.5px',
+                      letterSpacing: '-4px',
                       lineHeight: 1,
                       color: isPour && pourProgress > 0.3 ? '#FFF' : C.text,
-                      textShadow: isPour && pourProgress > 0.3 ? '0 1px 3px rgba(30,90,143,0.5)' : 'none',
+                      textShadow: isPour && pourProgress > 0.3 ? '0 1px 4px rgba(30,90,143,0.55)' : 'none',
                       fontVariantNumeric: 'tabular-nums',
                       transition: 'color 0.35s ease',
                     }}
                   >
-                    {tToNext}s
+                    {tToNext}
                   </div>
                   {stillActing && actionLeft > 0 && (
                     <div
