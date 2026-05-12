@@ -11,6 +11,7 @@ import {
   actionDurationForStep,
   actionVerb,
 } from '../../lib/brewPlan';
+import { useWakeLock } from '../../lib/useWakeLock';
 import { CircularTimer } from '../ui/CircularTimer';
 import { WaterFill } from '../ui/WaterFill';
 import { WaterStream } from '../ui/WaterStream';
@@ -62,6 +63,9 @@ function actionHintTerm(step, idx) {
 export function BrewRunningScreen({ day, onFinish }) {
   const [elapsed, setElapsed] = useState(0);
   const [phase, setPhase] = useState('running');
+  // Mantén la pantalla encendida mientras el brew está en curso. La voz
+  // y los tiempos importan más que el ahorro de batería durante 3 minutos.
+  useWakeLock(true);
   const [voiceOn, setVoiceOn] = useState(true);
   const announcedRef = useRef(new Set());
   const preAnnouncedRef = useRef(new Set());
