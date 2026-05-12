@@ -3,6 +3,8 @@ import { ChevronLeft, Check, Clock, Droplet, ArrowRight, Search, X } from 'lucid
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
 import { BARISTAS, getBarista } from '../../data/baristas';
+import { photoForSeed, BOTTOM_PHOTO } from '../../data/photos';
+import { OreaPhoto } from '../ui/OreaPhoto';
 import { formatTime } from '../../lib/format';
 
 // Comprueba si una receta (día) hace match con la query del buscador.
@@ -54,6 +56,9 @@ function compactStep(step, idx) {
 function RecipeCard({ day, completed, onStart }) {
   const total = day.steps?.[day.steps.length - 1]?.at || null;
   const pours = (day.steps || []).filter((s) => s.action === 'pour').length;
+  // Thumbnail: si el día tiene un fondo conocido (FAST/OPEN/CLASSIC/APEX),
+  // usamos la foto del fondo; si no, una rotativa basada en day.num.
+  const thumbSrc = (day.bottom && BOTTOM_PHOTO[day.bottom]) || photoForSeed(day.num);
 
   return (
     <div
@@ -65,19 +70,24 @@ function RecipeCard({ day, completed, onStart }) {
         marginBottom: 12,
       }}
     >
-      {/* Cabecera con día + título */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
-        <div>
-          <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase' }}>
-            Día {day.num}
-          </div>
-          <h3 style={{ margin: '3px 0 0', fontSize: 17, fontWeight: 700, color: C.text, letterSpacing: '-0.3px', lineHeight: 1.2 }}>
-            {day.title}
-          </h3>
+      {/* Cabecera con thumbnail + día + título */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+        <div style={{ flexShrink: 0, width: 64, height: 64, borderRadius: 14, overflow: 'hidden' }}>
+          <OreaPhoto src={thumbSrc} alt={day.title} radius={14} aspect="1/1" />
         </div>
-        {completed && (
-          <Check size={18} strokeWidth={2.5} style={{ color: C.success, flexShrink: 0 }} />
-        )}
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase' }}>
+              Día {day.num}
+            </div>
+            <h3 style={{ margin: '3px 0 0', fontSize: 17, fontWeight: 700, color: C.text, letterSpacing: '-0.3px', lineHeight: 1.2 }}>
+              {day.title}
+            </h3>
+          </div>
+          {completed && (
+            <Check size={18} strokeWidth={2.5} style={{ color: C.success, flexShrink: 0 }} />
+          )}
+        </div>
       </div>
 
       {/* Parámetros clave en una línea */}

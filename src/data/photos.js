@@ -22,6 +22,37 @@ export const OREA_PHOTOS = {
   baseFast: '/orea/base-fast.webp',
   baseApex: '/orea/base-apex.webp',
   supportBase: '/orea/support-base.webp',
+  waveFiltersStack: '/orea/wave-filters-stack.webp',
+  waveFilterOpen: '/orea/wave-filter-open.webp',
+  flatFiltersStack: '/orea/flat-filters-stack.webp',
+  flatFilterOpen: '/orea/flat-filter-open.webp',
+};
+
+// Foto representativa para usar como decoración aleatoria/placeholder
+// en cards que no tienen una asignación específica.
+export const ORDERED_PHOTOS = [
+  '/orea/three-quarter.webp',
+  '/orea/on-server.webp',
+  '/orea/top-view.webp',
+  '/orea/ground-coffee.webp',
+  '/orea/tilted.webp',
+  '/orea/front.webp',
+  '/orea/wave-filter-open.webp',
+  '/orea/flat-filter-open.webp',
+  '/orea/modular-parts.webp',
+  '/orea/wave-filter.webp',
+  '/orea/white-filter.webp',
+  '/orea/steel-base.webp',
+  '/orea/wave-filters-stack.webp',
+  '/orea/flat-filters-stack.webp',
+  '/orea/support-base.webp',
+];
+
+// Devuelve una foto determinista basada en un seed (por ejemplo, day.num).
+// Útil como placeholder cuando no hay una asignación explícita.
+export const photoForSeed = (seed) => {
+  const n = typeof seed === 'number' ? seed : (seed?.length || 0);
+  return ORDERED_PHOTOS[n % ORDERED_PHOTOS.length];
 };
 
 // Mapa fondo → foto del fondo (para destacar el "bottom" de la receta del día).

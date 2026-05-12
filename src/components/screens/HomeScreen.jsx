@@ -6,8 +6,10 @@ import { DayCard } from '../ui/DayCard';
 import { MethodSwitcher } from '../ui/MethodSwitcher';
 import { MethodIcon } from '../ui/MethodIcon';
 import { SocialButton } from '../ui/SocialButton';
+import { OreaPhoto } from '../ui/OreaPhoto';
 import { getMethod } from '../../data/methods';
 import { ZERIS } from '../../data/zerisInfo';
+import { OREA_PHOTOS } from '../../data/photos';
 import { GlossaryScreen } from './GlossaryScreen';
 import { RecipesScreen } from './RecipesScreen';
 import { ChallengeScreen } from './ChallengeScreen';
@@ -147,8 +149,11 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
         </button>
       </div>
 
-      {/* Hero */}
-      <div style={{ padding: '8px 20px 20px' }}>
+      {/* Hero photo de la cafetera + título */}
+      <div style={{ padding: '8px 20px 14px' }}>
+        <OreaPhoto src={OREA_PHOTOS.tilted} alt="OREA V4 Narrow" radius={18} aspect="16/10" />
+      </div>
+      <div style={{ padding: '6px 20px 20px' }}>
         <h1 style={{ color: C.text, fontSize: 44, fontWeight: 200, lineHeight: 0.95, letterSpacing: '-2px', margin: 0 }}>
           30 días
           <br />

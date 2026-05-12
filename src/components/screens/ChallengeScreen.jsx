@@ -1,6 +1,8 @@
 import { ChevronLeft, Instagram, Camera, Coffee, Smartphone, Gift, ExternalLink } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { ZERIS } from '../../data/zerisInfo';
+import { OREA_PHOTOS } from '../../data/photos';
+import { OreaPhoto } from '../ui/OreaPhoto';
 
 const HASHTAG = '#RetoZerisCoffee';
 const IG_HANDLE = '@zeriscoffeeroaster';
@@ -32,8 +34,13 @@ export function ChallengeScreen({ onBack }) {
         </button>
       </div>
 
+      {/* Hero photo: la cafetera completa para sugerir el tipo de foto que se publica */}
+      <div style={{ padding: '4px 20px 18px' }}>
+        <OreaPhoto src={OREA_PHOTOS.onServer} alt="OREA V4 Narrow sobre la jarra" radius={18} aspect="16/10" />
+      </div>
+
       {/* Hero */}
-      <div style={{ padding: '8px 20px 24px' }}>
+      <div style={{ padding: '0 20px 24px' }}>
         <div style={{ fontSize: 10, letterSpacing: '3px', color: C.text, fontWeight: 700 }}>
           RETO EN REDES
         </div>
