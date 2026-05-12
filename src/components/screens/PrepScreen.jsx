@@ -21,24 +21,29 @@ function extractClicks(grindText) {
 export function PrepScreen({ day, onBack, onContinue }) {
   const steps = [
     {
+      id: 'mount',
+      title: 'Monta la cafetera sobre la báscula',
+      detail: `Pon el filtro de papel en la ${day.bottom}, monta la cafetera sobre la jarra y deja todo el conjunto sobre la báscula. La cafetera se queda ahí TODO el rato — no la muevas durante el brew, porque la báscula te marcará el peso real del café y del agua paso a paso.`,
+    },
+    {
       id: 'filter',
       title: 'Enjuaga el filtro',
-      detail: `Coloca el filtro de papel en la ${day.bottom}. Enjuágalo con ~100 g de agua hirviendo. Esto retira el sabor a papel — sin enjuague, la taza queda con un fondo cartón que arruina los aromas.`,
+      detail: 'Vierte ~100 g de agua hirviendo sobre el filtro. Esto retira el sabor a papel (sin enjuague, la taza queda con un fondo cartón) y templa el filtro y la jarra.',
     },
     {
       id: 'discard',
       title: 'Tira el agua del enjuague',
-      detail: 'Vacía la jarra que ha quedado debajo. La cafetera y el filtro quedan templados, lo que ayuda a mantener estable la temperatura del agua durante la extracción.',
+      detail: 'Vacía la jarra que está debajo del dripper sin sacar el dripper. Vuelve a colocar la cafetera completa sobre la báscula. Los equipos quedan templados, lo que ayuda a mantener estable la temperatura del agua durante la extracción.',
     },
     {
       id: 'tare',
-      title: 'Báscula a cero',
-      detail: 'Pon la cafetera (con el filtro montado) sobre la báscula y tárala. Si tu báscula tiene modo "pour-over" o "extracción", actívalo ahora: arrancará el cronómetro automáticamente al detectar los primeros gramos de agua.',
+      title: 'Báscula a CERO',
+      detail: 'Con la cafetera vacía pero con el filtro mojado en su sitio, pulsa el botón de tara. La báscula debe marcar 0 g. Si tu báscula tiene modo "pour-over" o "extracción", actívalo ahora: arranca el cronómetro solo al detectar los primeros gramos de agua. Este es el paso más crítico — sin tarar, el peso del café del siguiente paso no servirá.',
     },
     {
       id: 'beans',
       title: 'Pesa el café en grano',
-      detail: 'En un recipiente aparte. Tiene que ser café entero — la molienda viene en el siguiente paso, justo antes de extraer.',
+      detail: 'En un recipiente aparte (NO en el filtro todavía). Tiene que ser café entero. Si te pasas o te quedas corto unos gramos, ajusta antes de moler — el ratio del día se calcula sobre este peso.',
       value: `${day.coffee} g`,
     },
     {
@@ -49,13 +54,19 @@ export function PrepScreen({ day, onBack, onContinue }) {
     },
     {
       id: 'pour-grounds',
-      title: 'Vacía el molido al filtro',
-      detail: 'Y dale un golpecito suave al lateral del dripper para nivelar el lecho. Una superficie plana ayuda a que el agua se reparta uniformemente durante el bloom.',
+      title: `Vacía el molido al filtro y verifica ${day.coffee} g en la báscula`,
+      detail: `Ahora sí, vacía el molido sobre el filtro. La báscula tiene que marcar aproximadamente ${day.coffee} g (±0,5 g aceptable). Si el peso se aleja mucho, vacía y vuelve a moler la cantidad exacta. Dale un golpecito suave al lateral del dripper para nivelar el lecho. Este peso es la base sobre la que se calcula el ratio del día (${day.ratio}).`,
+      value: `${day.coffee} g`,
+    },
+    {
+      id: 'reset',
+      title: 'Vuelve a tarar la báscula a 0',
+      detail: 'Con el café ya en el filtro, pulsa de nuevo la tara. La báscula vuelve a 0 g, y a partir de aquí va a mostrarte el peso del AGUA que viertas durante el brew. Sin este paso, los gramos del cronómetro ("vierte hasta 100 g") no cuadran con lo que ves en la báscula.',
     },
     {
       id: 'heat-water',
       title: 'Calienta el agua',
-      detail: `Necesitas al menos ${day.water} g para el brew (más los ~100 g que ya usaste para enjuagar el filtro). Si tienes kettle de cuello de cisne, mucho mejor: permite verter con precisión.`,
+      detail: `Necesitas al menos ${day.water} g para el brew (más los ~100 g que ya usaste para enjuagar). Si tienes kettle de cuello de cisne, mucho mejor: permite verter con precisión a la altura y caudal correctos.`,
       value: `${day.temp} °C`,
     },
   ];

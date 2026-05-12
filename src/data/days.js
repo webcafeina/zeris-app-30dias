@@ -21,9 +21,9 @@ export const DAYS = [
     steps: [
       { at: 0, action: 'pour', water: 28, label: 'BLOOM · vierte hasta 28 g' },
       { at: 10, action: 'swirl', label: 'Swirl suave (sin cuchara)' },
-      { at: 40, action: 'pour', water: 100, label: 'Vierte hasta 100 g (circular)' },
-      { at: 80, action: 'pour', water: 160, label: 'Vierte hasta 160 g (circular)' },
-      { at: 120, action: 'pour', water: 230, label: 'Vierte hasta 230 g (circular)' },
+      { at: 40, action: 'pour', water: 100, label: 'Vierte hasta 100 g, haciéndolo en círculos' },
+      { at: 80, action: 'pour', water: 160, label: 'Vierte hasta 160 g, haciéndolo en círculos' },
+      { at: 120, action: 'pour', water: 230, label: 'Vierte hasta 230 g, haciéndolo en círculos' },
       { at: 140, action: 'rao', label: 'Rao spin · gira la cafetera 10s' },
       { at: 150, action: 'drain', label: 'Drawdown · espera última gota' },
     ]
@@ -326,9 +326,9 @@ export const DAYS = [
     coffee: 18, water: 300, ratio: '1:16,6', temp: 93, grind: 'Media-fina (igual que FAST)', bottom: 'OPEN',
     targetTime: [120, 160],
     steps: [
-      { at: 0, action: 'pour', water: 36, label: 'BLOOM 36 g · circular' },
+      { at: 0, action: 'pour', water: 36, label: 'BLOOM 36 g, haciéndolo en círculos' },
       { at: 10, action: 'swirl', label: 'Swirl' },
-      { at: 40, action: 'pour', water: 130, label: 'Vierte hasta 130 g · circular' },
+      { at: 40, action: 'pour', water: 130, label: 'Vierte hasta 130 g, haciéndolo en círculos' },
       { at: 75, action: 'pour', water: 215, label: 'Vierte hasta 215 g · CENTRAL' },
       { at: 105, action: 'pour', water: 300, label: 'Vierte hasta 300 g · CENTRAL' },
       { at: 135, action: 'drain', label: 'Drawdown rápido' },
@@ -347,9 +347,9 @@ export const DAYS = [
     coffee: 18, water: 300, ratio: '1:16,6', temp: 93, grind: '1 click más fino que FAST', bottom: 'APEX + Negotiator',
     targetTime: [160, 210],
     steps: [
-      { at: 0, action: 'pour', water: 36, label: 'BLOOM 36 g · circular' },
+      { at: 0, action: 'pour', water: 36, label: 'BLOOM 36 g, haciéndolo en círculos' },
       { at: 10, action: 'swirl', label: 'Swirl' },
-      { at: 40, action: 'pour', water: 130, label: 'Vierte hasta 130 g · circular' },
+      { at: 40, action: 'pour', water: 130, label: 'Vierte hasta 130 g, haciéndolo en círculos' },
       { at: 80, action: 'pour', water: 215, label: 'Vierte hasta 215 g · mezcla' },
       { at: 120, action: 'pour', water: 300, label: 'Vierte hasta 300 g · central' },
       { at: 150, action: 'drain', label: 'Drawdown' },
