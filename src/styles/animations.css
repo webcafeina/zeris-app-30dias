@@ -116,26 +116,34 @@ h1, h2, h3 {
   backface-visibility: hidden;
 }
 
+/* Cuatro orbes en paleta azul-violeta para integrar con el azul agua
+   del timer y la chrome B&W. Los nombres de las clases se mantienen
+   aunque el color haya cambiado para no tocar BackgroundOrbs.jsx. */
+
+/* Azul cielo suave */
 .zen-orb-peach {
-  background: radial-gradient(closest-side, #FFE4D2 0%, rgba(255, 228, 210, 0.4) 50%, transparent 80%);
+  background: radial-gradient(closest-side, #CFE0F2 0%, rgba(207, 224, 242, 0.4) 50%, transparent 80%);
   top: -18%;
   left: -18%;
 }
 
+/* Periwinkle (azul-lavanda) */
 .zen-orb-mint {
-  background: radial-gradient(closest-side, #D6EEDF 0%, rgba(214, 238, 223, 0.4) 50%, transparent 80%);
+  background: radial-gradient(closest-side, #D2D9F0 0%, rgba(210, 217, 240, 0.4) 50%, transparent 80%);
   top: 28%;
   right: -20%;
 }
 
+/* Lavanda */
 .zen-orb-lavender {
-  background: radial-gradient(closest-side, #E4D5F7 0%, rgba(228, 213, 247, 0.4) 50%, transparent 80%);
+  background: radial-gradient(closest-side, #DECEEF 0%, rgba(222, 206, 239, 0.4) 50%, transparent 80%);
   bottom: -20%;
   left: 10%;
 }
 
+/* Azul medio-pastel */
 .zen-orb-sky {
-  background: radial-gradient(closest-side, #D5E8F4 0%, rgba(213, 232, 244, 0.4) 50%, transparent 80%);
+  background: radial-gradient(closest-side, #C5D9EC 0%, rgba(197, 217, 236, 0.4) 50%, transparent 80%);
   top: 55%;
   left: -12%;
 }
