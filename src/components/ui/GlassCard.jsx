@@ -1,15 +1,17 @@
 import { C } from '../../styles/colors';
 
-export const GlassCard = ({ children, strong = false, style = {}, className = '' }) => (
+// Tarjeta neumórfica. Nombre se mantiene por compatibilidad con imports.
+// - default: superficie elevada (shadowOut).
+// - inset: superficie hundida (shadowIn) — útil para chips/displays internos.
+export const GlassCard = ({ children, inset = false, soft = false, style = {}, className = '' }) => (
   <div
     className={className}
     style={{
-      background: strong ? C.glassStrong : C.glass,
-      backdropFilter: 'blur(20px) saturate(180%)',
-      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-      border: `1px solid ${C.glassBorder}`,
+      background: C.surface,
       borderRadius: 24,
-      boxShadow: C.shadow,
+      boxShadow: inset
+        ? (soft ? C.shadowInSoft : C.shadowIn)
+        : (soft ? C.shadowOutSoft : C.shadowOut),
       ...style,
     }}
   >
