@@ -35,6 +35,14 @@
   50%      { transform: scale(1.03); }
 }
 
+/* Entrada "pum" para la card que se activa cuando cambia el paso del brew.
+   Pequeño rebote elástico al aparecer — bouncy pero corto. */
+@keyframes cardPum {
+  0%   { transform: translateY(-14px) scale(0.94); opacity: 0; }
+  55%  { transform: translateY(3px)   scale(1.03); opacity: 1; }
+  100% { transform: translateY(0)     scale(1);    opacity: 1; }
+}
+
 /* Chorrito cayendo: la gota nace ~3px por debajo del top y desciende
    hasta el inicio del ring (~70px). Aparece y desaparece para que se vea
    "caída", no un palote fijo. */

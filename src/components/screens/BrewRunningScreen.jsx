@@ -18,6 +18,30 @@ const ACTION_LABEL = {
   drain: 'DRAWDOWN',
 };
 
+// Interpolación de azul intenso → azul muy claro según `progress` (0..1).
+// Se usa tanto para el stroke del anillo del timer como para el tinte de
+// la card "AHORA · PASO" — ambos cambian de color a la vez, transmitiendo
+// el paso del tiempo de forma continua y suave en lugar de "el anillo
+// se cierra".
+function blueShade(progress) {
+  const t = Math.max(0, Math.min(1, progress));
+  // de #1E5A8F (azul intenso pourDark) a #D5E8F4 (azul muy pálido sky)
+  const r = Math.round(30 + (213 - 30) * t);
+  const g = Math.round(90 + (232 - 90) * t);
+  const b = Math.round(143 + (244 - 143) * t);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+// Versión con alpha para fondos teñidos (cards). Misma curva pero opacidad
+// constante baja para que el texto sea legible encima.
+function blueTintBg(progress, alpha = 0.16) {
+  const t = Math.max(0, Math.min(1, progress));
+  const r = Math.round(30 + (213 - 30) * t);
+  const g = Math.round(90 + (232 - 90) * t);
+  const b = Math.round(143 + (244 - 143) * t);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 // Mapeo acción → entrada del glosario (cuando aplica).
 // Para `pour` distinguimos bloom (primer vertido) del resto.
 function actionHintTerm(step, idx) {
@@ -94,6 +118,11 @@ export function BrewRunningScreen({ day, onFinish }) {
   const stepProgress = nextStep && stepDuration > 0 ? (elapsed - currentStep.at) / stepDuration : 1;
   const isPour = currentStep?.action === 'pour';
   const inUrgency = tToNext !== null && tToNext <= 5 && tToNext > 0;
+  // Color del anillo + tinte de la card AHORA. Va de azul intenso (0%
+  // del paso) a azul muy claro (100% del paso). En urgencia el componente
+  // CircularTimer se encarga de pasar a rojo.
+  const ringTint = blueShade(stepProgress);
+  const cardTintBg = blueTintBg(stepProgress, 0.16);
 
   // Sub-timer del vertido: cuántos segundos debe durar el ACTO de verter
   // (≠ del hueco hasta el siguiente paso). Solo aplica a pasos pour.
@@ -239,6 +268,8 @@ export function BrewRunningScreen({ day, onFinish }) {
                 size={240}
                 stroke={13}
                 dangerAt={5}
+                noDrain
+                strokeColorOverride={ringTint}
               >
                 {isPour && pourDuration > 0 && (
                   <WaterFill
@@ -347,27 +378,37 @@ export function BrewRunningScreen({ day, onFinish }) {
         )}
       </div>
 
-      {/* Etiqueta completa del paso actual */}
+      {/* Etiqueta completa del paso actual. Tinte azul que va de intenso →
+          claro siguiendo stepProgress, igual que el anillo del timer.
+          Cuando cambia el paso, la card se remonta (key={currentIdx})
+          con animación "pum" para que el usuario perciba el salto. */}
       {currentStep && (
         <div style={{ padding: '0 20px 12px' }}>
           <div
+            key={currentIdx}
             style={{
-              background: C.surface,
+              background: cardTintBg,
               boxShadow: C.shadowOutSoft,
               borderRadius: 18,
               padding: '14px 18px',
               textAlign: 'center',
+              animation: 'cardPum 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+              transition: 'background 0.9s ease, opacity 0.9s ease',
+              // La card se va desvaneciendo según pasa el tiempo: empieza
+              // 100% y termina ~55%. No la dejamos invisible para que
+              // siempre se pueda leer la instrucción.
+              opacity: 1 - stepProgress * 0.45,
             }}
           >
-            <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textFaint, fontWeight: 700, marginBottom: 4 }}>
+            <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textMute, fontWeight: 700, marginBottom: 4 }}>
               AHORA · PASO {currentIdx + 1} DE {steps.length}
             </div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: C.text, lineHeight: 1.3, letterSpacing: '-0.2px' }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: C.text, lineHeight: 1.3, letterSpacing: '-0.2px' }}>
               {currentStep.label}
             </div>
             {actionHintTerm(currentStep, currentIdx) && (
               <div style={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
-                <span style={{ fontSize: 11, color: C.pour, fontWeight: 600 }}>
+                <span style={{ fontSize: 11, color: C.pourDark, fontWeight: 600 }}>
                   <Hint term={actionHintTerm(currentStep, currentIdx)}>¿Qué es esto?</Hint>
                 </span>
               </div>

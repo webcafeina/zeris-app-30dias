@@ -1,10 +1,15 @@
 import { C } from '../../styles/colors';
 
 // Anillo de progreso circular sobre superficie neumórfica raised.
-// - `progress` (0..1): fracción del paso completada (el anillo se vacía).
+// - `progress` (0..1): fracción del paso completada.
 // - `remaining` (segundos): para disparar urgencia visual (azul → rojo).
 // - `dangerAt` (segundos): umbral de urgencia. Por defecto 5s.
-// - `showWater`: si true, renderiza children como capa de agua dentro del anillo.
+// - `noDrain` (bool): si true, el anillo se queda completo (no se vacía
+//   con dashoffset). Útil para combinar con `strokeColorOverride` y
+//   transmitir el paso del tiempo solo por color.
+// - `strokeColorOverride`: si se pasa, ignora el color automático
+//   (azul / rojo) y usa ese valor directamente. El caller controla la
+//   interpolación (p.ej. azul intenso → azul claro según stepProgress).
 // - `children`: contenido central (número, etiqueta) y/o WaterFill anidado.
 export function CircularTimer({
   progress = 0,
@@ -12,15 +17,19 @@ export function CircularTimer({
   size = 260,
   stroke = 14,
   dangerAt = 5,
+  noDrain = false,
+  strokeColorOverride = null,
   children,
 }) {
   const p = Math.max(0, Math.min(1, progress));
   const r = (size - stroke) / 2;
   const circumference = 2 * Math.PI * r;
-  const dashoffset = circumference * p;
+  const dashoffset = noDrain ? 0 : circumference * p;
 
   const inUrgency = remaining !== null && remaining !== undefined && remaining <= dangerAt && remaining > 0;
-  const strokeColor = inUrgency ? C.danger : C.pour;
+  const strokeColor = strokeColorOverride
+    ? (inUrgency ? C.danger : strokeColorOverride)
+    : (inUrgency ? C.danger : C.pour);
 
   return (
     <div
