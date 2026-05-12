@@ -3,20 +3,25 @@ import { Coffee, ExternalLink, Sparkles, Check } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { FLASH_DISCOUNT } from '../../data/coffees';
 import { CoffeeBagThumb } from './CoffeeBagThumb';
+import { useZerisProduct } from '../../lib/useZerisProduct';
 
 // Card de "café recomendado para este ejercicio".
-// La data sale de data/coffees.js — al integrar con la API real de
-// zeriscoffee.com basta con que esos objetos tengan los mismos campos.
-//
-// Si `coffee.photo` apunta a una URL real, se muestra como imagen.
-// Si es null, cae en un placeholder SVG de bolsa con el código del origen.
+// Datos editoriales (notas, resumen, perfil) viven en data/coffees.js.
+// Datos en vivo (nombre, link, imagen destacada, precio si lo añadimos
+// más adelante) llegan del WP REST de zeriscoffee.com vía useZerisProduct.
+// Si el fetch falla (sin red, sin REST API, sin slug), cae al placeholder
+// SVG de la bolsa con el código del origen.
 export function CoffeeRecommendationCard({ coffee }) {
   const [imgError, setImgError] = useState(false);
   const [codeCopied, setCodeCopied] = useState(false);
 
+  const liveProduct = useZerisProduct(coffee?.slug);
+
   if (!coffee) return null;
 
-  const showPhoto = coffee.photo && !imgError;
+  const photoUrl = (!imgError && liveProduct?.image) || coffee.photo || null;
+  const shopUrl = liveProduct?.link || coffee.shopUrl || 'https://zeriscoffee.com/tienda/';
+  const displayName = liveProduct?.name || coffee.name;
 
   const copyFlashCode = async () => {
     try {
@@ -45,16 +50,23 @@ export function CoffeeRecommendationCard({ coffee }) {
         </span>
       </div>
 
-      {/* Cabecera: thumb (foto o bolsa-placeholder) + nombre + origen */}
+      {/* Cabecera: foto destacada (o bolsa placeholder) + nombre + origen */}
       <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
         <div style={{ flexShrink: 0, width: 96 }}>
-          {showPhoto ? (
+          {photoUrl ? (
             <img
-              src={coffee.photo}
-              alt={coffee.name}
+              src={photoUrl}
+              alt={displayName}
               onError={() => setImgError(true)}
               loading="lazy"
-              style={{ width: 96, height: 120, objectFit: 'cover', borderRadius: 10, display: 'block' }}
+              style={{
+                width: 96,
+                height: 120,
+                objectFit: 'cover',
+                borderRadius: 10,
+                display: 'block',
+                background: C.surfaceMute,
+              }}
             />
           ) : (
             <CoffeeBagThumb coffee={coffee} size={96} />
@@ -62,11 +74,13 @@ export function CoffeeRecommendationCard({ coffee }) {
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: C.text, letterSpacing: '-0.3px', lineHeight: 1.15 }}>
-            {coffee.name}
+            {displayName}
           </h3>
-          <div style={{ marginTop: 4, fontSize: 11, letterSpacing: '1.5px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase' }}>
-            {coffee.region}
-          </div>
+          {coffee.region && (
+            <div style={{ marginTop: 4, fontSize: 11, letterSpacing: '1.5px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase' }}>
+              {coffee.region}
+            </div>
+          )}
           <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
             {[coffee.process, coffee.roast].filter(Boolean).map((chip) => (
               <span
@@ -107,7 +121,7 @@ export function CoffeeRecommendationCard({ coffee }) {
         </p>
       )}
 
-      {/* Flash discount — "llévatelo ahora con 3% extra" */}
+      {/* Flash discount */}
       {FLASH_DISCOUNT && (
         <div
           style={{
@@ -170,7 +184,7 @@ export function CoffeeRecommendationCard({ coffee }) {
 
       {/* CTA principal a la tienda */}
       <a
-        href={coffee.shopUrl}
+        href={shopUrl}
         target="_blank"
         rel="noopener noreferrer"
         style={{

@@ -1,14 +1,16 @@
-// Catálogo de cafés de Zeri's Coffee recomendados para cada ejercicio.
+// Catálogo de cafés Zeri's recomendados por ejercicio.
+// `slug` apunta al slug REAL del producto en zeriscoffee.com (WordPress).
+// En runtime, `lib/zerisCatalog.js` resuelve nombre, link y imagen destacada
+// vía /wp-json/wp/v2/product?slug=... — así la imagen siempre es la
+// imagen destacada actual de la web (no requiere mantenimiento aquí).
 //
-// ⚠️ DATOS PLACEHOLDER. Cuando dispongamos del catálogo real de
-// zeriscoffee.com (vía WooCommerce REST API, CSV exportado o lista
-// manual), basta con reemplazar las entradas de COFFEES con los
-// nombres / orígenes / precios / URLs verdaderos. La estructura del
-// objeto y los baristaIds quedarán intactos.
+// El resto de campos (notes, summary, process, roast) se mantienen
+// editorialmente aquí porque no están todos accesibles vía REST sin
+// autenticación. Cuando dispongamos del consumer key de WooCommerce,
+// podremos enriquecer también esos campos automáticamente.
 
 // Descuento "ahora" universal: 3% extra al comprar el café recomendado
-// del ejercicio en el momento. Margen pequeño a propósito (no es la
-// promo principal — solo un nudge para empujar la compra).
+// del ejercicio en el momento.
 export const FLASH_DISCOUNT = {
   code: 'RECETA3',
   percent: 3,
@@ -16,90 +18,67 @@ export const FLASH_DISCOUNT = {
 };
 
 export const COFFEES = {
-  // Café claro, perfilado y limpio — ideal para ejercicios de cata y
-  // recetas que buscan claridad/acidez (Fundamentos, Variables).
-  ethiopiaWashed: {
-    id: 'ethiopiaWashed',
-    name: 'Etiopía Yirgacheffe',
-    region: 'Yirgacheffe · Etiopía',
+  // Café claro etíope — ejercicios de claridad / cata
+  ethiopiaBombe: {
+    id: 'ethiopiaBombe',
+    slug: 'ethiopia-bombe',
     code: 'ETH',
     process: 'Lavado',
     roast: 'Tueste claro',
     notes: 'Bergamota · jazmín · cítrico · té negro',
-    summary: 'Lavado etiópico de manual. Aromas florales muy marcados, acidez brillante. Perfecto para entrenar el paladar y para recetas pensadas para destacar matices.',
-    price: '14,90 €',
-    weight: '250 g',
-    photo: null, // pendiente de asignar imagen real
+    summary: 'Etíope lavado de manual. Aromas florales muy marcados y acidez brillante. Ideal para entrenar el paladar y para recetas que buscan destacar matices.',
     bagColor: '#C44D2E',
     bagAccent: '#F5C56B',
-    shopUrl: 'https://zeriscoffee.com/tienda/',
+    // shopUrl/photo/name/price salen automáticamente del WP REST.
   },
 
-  // Lavado balanceado — para días de receta base y ajuste de drawdown.
-  colombiaCaturra: {
-    id: 'colombiaCaturra',
-    name: 'Colombia Huila Caturra',
-    region: 'Huila · Colombia',
+  // Lavado balanceado / dulzor estructurado
+  fincaElDescansoLavado: {
+    id: 'fincaElDescansoLavado',
+    slug: 'finca-el-descanso-lavado',
     code: 'COL',
     process: 'Lavado',
     roast: 'Tueste claro-medio',
     notes: 'Caramelo · pera · cacao · panela',
-    summary: 'Dulzor estructurado y acidez controlada. Receta universal: si quieres una taza tipo "todo bien" sin sorpresas, es esta.',
-    price: '13,90 €',
-    weight: '250 g',
-    photo: null,
+    summary: 'Dulzor estructurado y acidez controlada. Una receta universal: si quieres una taza "todo bien" sin sorpresas, esta es la base.',
     bagColor: '#8B5A2B',
     bagAccent: '#D8B27E',
-    shopUrl: 'https://zeriscoffee.com/tienda/',
   },
 
-  // Naturales / honey — más cuerpo, frutas oscuras. Ejercicios de
-  // exploración de cuerpo y dulzor.
-  brasilNatural: {
-    id: 'brasilNatural',
-    name: 'Brasil Cerrado Natural',
-    region: 'Cerrado · Brasil',
-    code: 'BRA',
+  // Más cuerpo / fruta dulce — exploración de cuerpo
+  fincaBethania: {
+    id: 'fincaBethania',
+    slug: 'finca-bethania',
+    code: 'BET',
     process: 'Natural',
     roast: 'Tueste medio',
-    notes: 'Chocolate con leche · avellana · fruta roja madura',
+    notes: 'Chocolate con leche · avellana · fruta roja',
     summary: 'Más cuerpo, menos acidez. Ideal cuando trabajamos extracciones largas o queremos sentir el lado dulce-tostado.',
-    price: '12,50 €',
-    weight: '250 g',
-    photo: null,
     bagColor: '#4A2E1A',
     bagAccent: '#C29768',
-    shopUrl: 'https://zeriscoffee.com/tienda/',
   },
 
-  // Para los días de campeones / receta especial: algo distintivo,
-  // procesado anaeróbico o experimental.
-  costaRicaAnaerobic: {
-    id: 'costaRicaAnaerobic',
-    name: 'Costa Rica Naranjo Anaeróbico',
-    region: 'Naranjo · Costa Rica',
-    code: 'CRC',
-    process: 'Anaeróbico honey',
+  // Para los días de Campeones: algo experimental y memorable
+  fincaSanFranciscoAnaerobico: {
+    id: 'fincaSanFranciscoAnaerobico',
+    slug: 'finca-san-francisco-natural-anaerobico',
+    code: 'SFR',
+    process: 'Natural anaeróbico',
     roast: 'Tueste claro',
-    notes: 'Frutos rojos fermentados · ron · cacao puro',
-    summary: 'Una taza con personalidad: notas funky pero estructuradas. Lo bueno para los días de Campeones y para cuando quieras un café que se acuerden.',
-    price: '17,90 €',
-    weight: '250 g',
-    photo: null,
+    notes: 'Frutos rojos fermentados · ron · cacao',
+    summary: 'Una taza con personalidad y notas funky. Idónea para los días de Campeones y para cuando quieras un café que se recuerde.',
     bagColor: '#7A2E2E',
     bagAccent: '#E3B16F',
-    shopUrl: 'https://zeriscoffee.com/tienda/',
   },
 };
 
-// Heurística por fase: si un día no tiene `coffeeId` explícito, escoge
-// el café que mejor encaja con su fase del curso.
+// Mapa fase del curso → café por defecto.
 const DEFAULT_BY_PHASE = {
-  Fundamentos: 'colombiaCaturra',
-  Variables: 'ethiopiaWashed',
-  'Los 4 fondos': 'brasilNatural',
-  Campeones: 'costaRicaAnaerobic',
-  Cierre: 'ethiopiaWashed',
+  Fundamentos: 'fincaElDescansoLavado',
+  Variables: 'ethiopiaBombe',
+  'Los 4 fondos': 'fincaBethania',
+  Campeones: 'fincaSanFranciscoAnaerobico',
+  Cierre: 'ethiopiaBombe',
 };
 
 export const getCoffee = (id) => COFFEES[id] || null;
