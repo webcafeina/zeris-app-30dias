@@ -2,7 +2,17 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// Timestamp fijado en cada build de Vite. Lo inyectamos como define global
+// para que la app pueda mostrar la versión en el footer y así sea fácil
+// confirmar que el dispositivo está viendo el último deploy.
+const BUILD_DATE = new Date().toISOString();
+const BUILD_SHORT = BUILD_DATE.slice(0, 16).replace('T', ' ');
+
 export default defineConfig({
+  define: {
+    __BUILD_DATE__: JSON.stringify(BUILD_DATE),
+    __BUILD_SHORT__: JSON.stringify(BUILD_SHORT),
+  },
   plugins: [
     react(),
     VitePWA({

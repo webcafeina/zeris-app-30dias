@@ -347,6 +347,21 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
         >
           zeriscoffee.com
         </a>
+        {/* Build timestamp — sirve para confirmar visualmente que el
+            dispositivo está viendo el último deploy. Lo inyecta vite.config
+            en cada build. */}
+        <div
+          style={{
+            marginTop: 8,
+            fontSize: 9,
+            color: C.textFaint,
+            letterSpacing: '1.5px',
+            fontFamily: 'ui-monospace, SF Mono, Menlo, monospace',
+            opacity: 0.7,
+          }}
+        >
+          BUILD · {typeof __BUILD_SHORT__ !== 'undefined' ? __BUILD_SHORT__ : 'dev'}
+        </div>
       </div>
 
       {/* Promo: descuento de bienvenida + pack-reto. Visible siempre desde
