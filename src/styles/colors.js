@@ -1,58 +1,70 @@
-// Paleta — neumorfismo blanco suave (Zeri's Coffee)
-// Fondo y superficies blancos. La profundidad nace de sombras MUY suaves:
-// luz blanca top-left + gris frío sutil bottom-right.
-// Tonos pastel en general para mantener todo amable y limpio.
+// Paleta — minimalista B&W editorial con sombras verde-lima naturales.
+// Estructura por bordes finos + sombras suaves color hoja de cafeto para
+// dar "lift" a las tarjetas sin perder el carácter editorial limpio.
 
+const BLACK = '#0A0A0A';
 const WHITE = '#FFFFFF';
-const SHADOW_DARK = 'rgba(174, 184, 204, 0.22)';   // gris frío muy sutil
-const SHADOW_LIGHT = 'rgba(255, 255, 255, 1)';     // luz blanca pura
+const BORDER = 'rgba(10, 10, 10, 0.08)';
+const BORDER_STRONG = 'rgba(10, 10, 10, 0.20)';
+
+// Sombras verde-lima muy suaves: evoca hoja de cafeto, fresco y natural,
+// sin teñir las tarjetas. Mantiene el carácter B&W editorial.
+const SHADOW_GREEN = 'rgba(176, 210, 140, 0.50)';
+const SHADOW_GREEN_SOFT = 'rgba(176, 210, 140, 0.34)';
+const SHADOW_LIGHT = 'rgba(255, 255, 255, 1)';
 
 export const C = {
-  // Superficie
-  bg: WHITE,
-  bgGradient: WHITE,
+  // Superficies
+  bg: '#FCFCFD',
+  bgGradient: '#FCFCFD',
   surface: WHITE,
+  surfaceMute: '#F7F8F3',     // off-white con un toque cálido-vegetal
 
-  // Sombras neumórficas suaves (azul-gris en lugar de tostado)
-  shadowOut: `-6px -6px 14px ${SHADOW_LIGHT}, 6px 6px 14px ${SHADOW_DARK}`,
-  shadowOutSoft: `-3px -3px 8px ${SHADOW_LIGHT}, 3px 3px 8px ${SHADOW_DARK}`,
-  shadowIn: `inset -3px -3px 7px ${SHADOW_LIGHT}, inset 3px 3px 7px ${SHADOW_DARK}`,
-  shadowInSoft: `inset -2px -2px 4px ${SHADOW_LIGHT}, inset 2px 2px 4px ${SHADOW_DARK}`,
+  // Bordes
+  border: BORDER,
+  borderStrong: BORDER_STRONG,
+  divider: BORDER,
 
-  // Keys legacy mantenidas para compatibilidad (no romper otros imports).
+  // Sombras verde-lima — profundidad orgánica sin perder limpieza
+  shadowOut: `-5px -5px 14px ${SHADOW_LIGHT}, 6px 6px 18px ${SHADOW_GREEN}`,
+  shadowOutSoft: `-3px -3px 8px ${SHADOW_LIGHT}, 4px 4px 12px ${SHADOW_GREEN_SOFT}`,
+  shadowIn: `inset -3px -3px 8px ${SHADOW_LIGHT}, inset 3px 3px 8px ${SHADOW_GREEN_SOFT}`,
+  shadowInSoft: `inset -2px -2px 5px ${SHADOW_LIGHT}, inset 2px 2px 6px ${SHADOW_GREEN_SOFT}`,
+  shadow: `0 2px 8px ${SHADOW_GREEN_SOFT}`,
+  shadowStrong: `0 12px 36px ${SHADOW_GREEN}, 0 4px 10px ${SHADOW_GREEN_SOFT}`,
+
+  // Texto — alto contraste
+  text: BLACK,
+  textMute: '#4A4A4A',
+  textFaint: '#8E8E8E',
+
+  // Acento principal: NEGRO (mantenemos B&W)
+  accent: BLACK,
+  accentBright: '#1F1F1F',
+  accentLight: 'rgba(10, 10, 10, 0.04)',
+
+  // Café espresso — reservado para detalles muy puntuales
+  coffee: '#3C2415',
+  coffeeLight: 'rgba(60, 36, 21, 0.06)',
+
+  // Azul agua — animación de vertido + ring del timer
+  pour: '#5BA0D9',
+  pourBright: '#86BCDF',
+  pourDark: '#3E7BAE',
+  pourLight: 'rgba(91, 160, 217, 0.10)',
+
+  brew: BLACK,
+  brewBright: '#2A2A2A',
+  brewLight: 'rgba(10, 10, 10, 0.04)',
+
+  // Estados
+  success: '#5A7D5A',
+  warn: '#A88440',
+  danger: '#C95252',
+
+  // Compat
   glass: WHITE,
   glassStrong: WHITE,
-  glassBorder: 'transparent',
+  glassBorder: BORDER,
   glassInner: WHITE,
-  shadow: `-3px -3px 8px ${SHADOW_LIGHT}, 3px 3px 8px ${SHADOW_DARK}`,
-  shadowStrong: `-6px -6px 14px ${SHADOW_LIGHT}, 6px 6px 14px ${SHADOW_DARK}`,
-
-  // Texto en grises neutros (no negro absoluto)
-  text: '#3A4151',
-  textMute: '#7A8294',
-  textFaint: '#A8B0BE',
-
-  // Acento café — sobrio, presente en CTAs y números clave
-  accent: '#4A2F1F',
-  accentBright: '#6B452B',
-  accentLight: 'rgba(74, 47, 31, 0.08)',
-
-  // Vertido: azul pastel suave (no saturado)
-  pour: '#7BB0DC',
-  pourBright: '#A5CCE5',
-  pourDark: '#4E89B8',
-  pourLight: 'rgba(123, 176, 220, 0.12)',
-
-  // Espera / drawdown
-  brew: '#4A2F1F',
-  brewBright: '#6B452B',
-  brewLight: 'rgba(74, 47, 31, 0.06)',
-
-  // Estados pastel
-  success: '#86B585',
-  warn: '#D4B26A',
-  danger: '#E69191',
-
-  // Líneas sutiles
-  divider: 'rgba(60, 70, 90, 0.06)',
 };

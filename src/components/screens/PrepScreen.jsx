@@ -1,11 +1,23 @@
 import { useState } from 'react';
-import { ChevronLeft, Check, Play } from 'lucide-react';
+import { ChevronLeft, Check, ArrowRight, Clock } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { warmUpVoice } from '../../lib/voice';
 
-// Checklist de preparación física previa al brew.
-// Cada paso es tappable: se marca/desmarca. El CTA siempre está disponible
-// (los expertos pueden saltar), pero cambia de estilo cuando todo está listo.
+// Extrae el rango de clicks de un texto tipo "Media-fina (21–25 clicks Comandante)".
+// Devuelve "21-25 clicks" o null si no encuentra patrón. Crítico: el click es lo
+// que más se olvida al moler, así que lo mostramos prominente.
+function extractClicks(grindText) {
+  if (!grindText) return null;
+  const m = /(\d+\s*[-–]\s*\d+|\d+)\s*clicks?/i.exec(grindText);
+  if (!m) return null;
+  const range = m[1].replace(/–/g, '-').replace(/\s+/g, '');
+  return `${range} clicks`;
+}
+
+// Pasos previos al brew. Sin cronómetro: lista para completar a tu ritmo.
+// Estilo editorial: números muy grandes, mucho aire entre filas, hairlines.
+// Diferenciado visualmente del Brew (que sí es timed) para que el usuario
+// entienda que aquí no corre el reloj.
 export function PrepScreen({ day, onBack, onContinue }) {
   const steps = [
     {
@@ -25,7 +37,7 @@ export function PrepScreen({ day, onBack, onContinue }) {
     },
     {
       id: 'beans',
-      title: `Pesa ${day.coffee} g de café en grano`,
+      title: 'Pesa el café en grano',
       detail: 'En un recipiente aparte. Tiene que ser café entero — la molienda viene en el siguiente paso, justo antes de extraer.',
       value: `${day.coffee} g`,
     },
@@ -33,6 +45,7 @@ export function PrepScreen({ day, onBack, onContinue }) {
       id: 'grind',
       title: 'Muele el café',
       detail: `${day.grind}. Hazlo justo ahora, no antes — el café molido pierde aromas en cuestión de minutos.`,
+      value: extractClicks(day.grind),
     },
     {
       id: 'pour-grounds',
@@ -41,7 +54,7 @@ export function PrepScreen({ day, onBack, onContinue }) {
     },
     {
       id: 'heat-water',
-      title: `Calienta agua a ${day.temp} °C`,
+      title: 'Calienta el agua',
       detail: `Necesitas al menos ${day.water} g para el brew (más los ~100 g que ya usaste para enjuagar el filtro). Si tienes kettle de cuello de cisne, mucho mejor: permite verter con precisión.`,
       value: `${day.temp} °C`,
     },
@@ -63,7 +76,7 @@ export function PrepScreen({ day, onBack, onContinue }) {
   return (
     <div style={{ minHeight: '100vh', background: C.bg, paddingBottom: 24 }}>
       {/* Header */}
-      <div style={{ padding: '20px 20px 8px', display: 'flex', alignItems: 'center' }}>
+      <div style={{ padding: '20px 20px 6px', display: 'flex', alignItems: 'center' }}>
         <button
           onClick={onBack}
           style={{
@@ -82,20 +95,53 @@ export function PrepScreen({ day, onBack, onContinue }) {
         </button>
       </div>
 
-      <div style={{ padding: '0 20px 18px' }}>
-        <div style={{ fontSize: 10, letterSpacing: '3px', color: C.accent, fontWeight: 700 }}>
-          DÍA {day.num} · PREPARACIÓN
+      <div style={{ padding: '0 20px 28px' }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '5px 10px',
+            border: `1px solid ${C.border}`,
+            borderRadius: 999,
+            marginBottom: 14,
+          }}
+        >
+          <Clock size={11} style={{ color: C.textFaint, textDecoration: 'line-through' }} />
+          <span
+            style={{
+              fontSize: 9,
+              letterSpacing: '2px',
+              color: C.textFaint,
+              fontWeight: 700,
+              textTransform: 'uppercase',
+            }}
+          >
+            Pasos previos · sin cronómetro
+          </span>
         </div>
-        <h2 style={{ color: C.text, fontSize: 26, fontWeight: 700, lineHeight: 1.1, marginTop: 6, letterSpacing: '-0.5px' }}>
-          Deja todo a punto
+        <h2
+          style={{
+            color: C.text,
+            fontSize: 38,
+            fontWeight: 200,
+            lineHeight: 0.98,
+            marginTop: 0,
+            marginBottom: 12,
+            letterSpacing: '-1.8px',
+          }}
+        >
+          Antes del
+          <br />
+          <span style={{ fontWeight: 700 }}>cronómetro</span>
         </h2>
-        <p style={{ color: C.textMute, fontSize: 13, lineHeight: 1.5, marginTop: 8 }}>
-          Antes de arrancar el cronómetro, completa cada paso. Tócalo cuando lo hayas hecho para marcarlo como listo.
+        <p style={{ color: C.textMute, fontSize: 14, lineHeight: 1.55, marginTop: 8 }}>
+          Aquí no corre el reloj. Completa cada paso a tu ritmo. Cuando estés listo, arrancamos el cronómetro y empieza el brew.
         </p>
       </div>
 
-      {/* Steps */}
-      <div style={{ padding: '0 20px' }}>
+      {/* Lista de pasos editorial */}
+      <div style={{ padding: '0 4px' }}>
         {steps.map((step, i) => {
           const isChecked = checked.has(step.id);
           return (
@@ -105,69 +151,93 @@ export function PrepScreen({ day, onBack, onContinue }) {
               style={{
                 width: '100%',
                 textAlign: 'left',
-                background: C.surface,
+                background: 'transparent',
                 border: 'none',
-                borderRadius: 18,
-                padding: 16,
-                marginBottom: 12,
-                boxShadow: isChecked ? C.shadowInSoft : C.shadowOutSoft,
+                borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
+                borderBottom: `1px solid ${C.border}`,
+                padding: '18px 20px',
                 cursor: 'pointer',
-                transition: 'box-shadow 0.2s, opacity 0.2s',
-                opacity: isChecked ? 0.62 : 1,
                 display: 'flex',
-                gap: 14,
+                gap: 20,
                 alignItems: 'flex-start',
+                transition: 'background 0.15s',
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = C.surfaceMute; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+              onTouchStart={(e) => { e.currentTarget.style.background = C.surfaceMute; }}
+              onTouchEnd={(e) => { e.currentTarget.style.background = 'transparent'; }}
             >
+              {/* Número editorial XL */}
               <div
                 style={{
-                  width: 32,
-                  height: 32,
                   flexShrink: 0,
-                  borderRadius: '50%',
-                  background: C.surface,
-                  boxShadow: isChecked ? C.shadowInSoft : C.shadowOutSoft,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: isChecked ? C.success : C.textFaint,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  transition: 'box-shadow 0.2s, color 0.2s',
+                  width: 44,
+                  fontSize: 36,
+                  fontWeight: 200,
+                  letterSpacing: '-1.5px',
+                  lineHeight: 1,
+                  color: isChecked ? C.textFaint : C.text,
+                  fontVariantNumeric: 'tabular-nums',
+                  position: 'relative',
+                  textAlign: 'center',
                 }}
               >
-                {isChecked ? <Check size={18} strokeWidth={2.5} /> : i + 1}
+                {isChecked ? (
+                  <Check size={26} strokeWidth={2.5} style={{ color: C.success }} />
+                ) : (
+                  String(i + 1).padStart(2, '0')
+                )}
               </div>
+
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline' }}>
-                  <div
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    gap: 12,
+                    alignItems: 'baseline',
+                    marginBottom: 6,
+                  }}
+                >
+                  <h3
                     style={{
-                      color: C.text,
-                      fontSize: 15,
-                      fontWeight: 600,
-                      letterSpacing: '-0.2px',
+                      margin: 0,
+                      color: isChecked ? C.textMute : C.text,
+                      fontSize: 18,
+                      fontWeight: 700,
+                      letterSpacing: '-0.3px',
+                      lineHeight: 1.2,
                       textDecoration: isChecked ? 'line-through' : 'none',
                     }}
                   >
                     {step.title}
-                  </div>
+                  </h3>
                   {step.value && (
                     <div
                       style={{
-                        fontSize: 13,
-                        color: C.accent,
+                        fontSize: 18,
+                        color: C.text,
                         fontWeight: 700,
                         fontVariantNumeric: 'tabular-nums',
                         whiteSpace: 'nowrap',
+                        letterSpacing: '-0.3px',
                       }}
                     >
                       {step.value}
                     </div>
                   )}
                 </div>
-                <div style={{ color: C.textMute, fontSize: 12.5, lineHeight: 1.45, marginTop: 5 }}>
+                <p
+                  style={{
+                    margin: 0,
+                    color: C.textMute,
+                    fontSize: 13.5,
+                    lineHeight: 1.5,
+                    opacity: isChecked ? 0.55 : 1,
+                  }}
+                >
                   {step.detail}
-                </div>
+                </p>
               </div>
             </button>
           );
@@ -178,15 +248,15 @@ export function PrepScreen({ day, onBack, onContinue }) {
       <div
         style={{
           textAlign: 'center',
-          padding: '6px 20px 14px',
+          padding: '20px 20px 14px',
           fontSize: 10,
           color: allDone ? C.success : C.textFaint,
           letterSpacing: '2px',
           fontWeight: 700,
-          transition: 'color 0.3s',
+          textTransform: 'uppercase',
         }}
       >
-        {checked.size} DE {steps.length} LISTOS
+        {checked.size} de {steps.length} listos
       </div>
 
       {/* CTA */}
@@ -198,12 +268,12 @@ export function PrepScreen({ day, onBack, onContinue }) {
           }}
           style={{
             width: '100%',
-            background: allDone ? C.accent : C.surface,
+            background: C.text,
             border: 'none',
-            borderRadius: 20,
+            borderRadius: 14,
             padding: '20px',
-            color: allDone ? '#FFF' : C.textMute,
-            fontSize: 14,
+            color: '#FFF',
+            fontSize: 13,
             fontWeight: 700,
             letterSpacing: '2px',
             display: 'flex',
@@ -211,18 +281,14 @@ export function PrepScreen({ day, onBack, onContinue }) {
             justifyContent: 'center',
             gap: 10,
             cursor: 'pointer',
-            boxShadow: allDone
-              ? '6px 6px 14px rgba(174,184,204,0.4), -6px -6px 14px rgba(255,255,255,1)'
-              : C.shadowOutSoft,
-            transition: 'background 0.3s, color 0.3s, box-shadow 0.3s',
           }}
         >
-          <Play size={18} fill={allDone ? '#FFF' : C.textMute} />
-          {allDone ? 'EMPEZAR EJERCICIO' : 'EMPEZAR EJERCICIO'}
+          ARRANCAR CRONÓMETRO
+          <ArrowRight size={18} />
         </button>
         {!allDone && (
           <div style={{ textAlign: 'center', fontSize: 11, color: C.textFaint, marginTop: 10 }}>
-            Puedes empezar sin marcar todos — pero asegúrate de tenerlos hechos.
+            Puedes arrancar sin marcar todos — pero asegúrate de tenerlos hechos.
           </div>
         )}
       </div>

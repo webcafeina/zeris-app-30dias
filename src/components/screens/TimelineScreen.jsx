@@ -88,7 +88,7 @@ export function TimelineScreen({ day, onBack, onStart }) {
                   fontSize: 9,
                   fontWeight: 700,
                   color: C.accent,
-                  boxShadow: '0 2px 8px rgba(194,65,12,0.2)',
+                  boxShadow: C.shadowOutSoft,
                 }}
               >
                 {i + 1}
@@ -144,7 +144,7 @@ export function TimelineScreen({ day, onBack, onStart }) {
             justifyContent: 'center',
             gap: 10,
             cursor: 'pointer',
-            boxShadow: '0 12px 32px rgba(194,65,12,0.35)',
+            boxShadow: C.shadowStrong,
           }}
         >
           <Play size={22} fill="#FFF" />

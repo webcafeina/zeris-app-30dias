@@ -409,7 +409,7 @@ export function BrewRunningScreen({ day, onFinish }) {
             fontWeight: 700,
             letterSpacing: '2px',
             cursor: 'pointer',
-            boxShadow: '6px 6px 14px rgba(168,142,113,0.4), -6px -6px 14px rgba(255,255,255,0.9)',
+            boxShadow: C.shadowStrong,
           }}
         >
           TERMINAR

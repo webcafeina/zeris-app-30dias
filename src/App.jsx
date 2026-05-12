@@ -6,6 +6,8 @@ import {
   getSelectedMethod,
   setSelectedMethod as persistMethod,
   clearSelectedMethod,
+  getMethodState,
+  setMethodState,
 } from './lib/storage';
 import { HomeScreen } from './components/screens/HomeScreen';
 import { CarouselScreen } from './components/screens/CarouselScreen';
@@ -40,7 +42,17 @@ export default function App() {
     );
   }
 
-  const handleChangeMethod = () => {
+  // Estado scoped al método activo. Cada método mantiene su propio progreso.
+  const methodState = getMethodState(state, method);
+
+  const handleSwitchMethod = (id) => {
+    persistMethod(id);
+    setMethod(id);
+    setActiveDayNum(null);
+    setSubScreen('carousel');
+  };
+
+  const handleResetMethod = () => {
     clearSelectedMethod();
     setMethod(null);
     setActiveDayNum(null);
@@ -58,25 +70,40 @@ export default function App() {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
   };
 
+  const updateMethodState = (mutator) => {
+    setState((prev) => {
+      const current = getMethodState(prev, method);
+      return setMethodState(prev, method, mutator(current));
+    });
+  };
+
   const handleComplete = (dayNum, log) => {
-    setState((prev) => ({
-      ...prev,
-      completed: { ...prev.completed, [dayNum]: true },
-      logs: { ...prev.logs, [dayNum]: log },
+    updateMethodState((current) => ({
+      ...current,
+      completed: { ...current.completed, [dayNum]: true },
+      logs: { ...current.logs, [dayNum]: log },
     }));
     handleBackHome();
   };
 
   const handleRepeatLater = (dayNum, log) => {
-    setState((prev) => ({
-      ...prev,
-      logs: { ...prev.logs, [dayNum]: { ...log, repeatRequested: true } },
+    updateMethodState((current) => ({
+      ...current,
+      logs: { ...current.logs, [dayNum]: { ...log, repeatRequested: true } },
     }));
     handleBackHome();
   };
 
   if (activeDayNum === null) {
-    return <HomeScreen state={state} onDayClick={handleSelectDay} onChangeMethod={handleChangeMethod} />;
+    return (
+      <HomeScreen
+        state={methodState}
+        method={method}
+        onDayClick={handleSelectDay}
+        onSwitchMethod={handleSwitchMethod}
+        onResetMethod={handleResetMethod}
+      />
+    );
   }
 
   const day = DAYS.find((d) => d.num === activeDayNum);

@@ -1,19 +1,24 @@
 import { useState } from 'react';
-import { BookOpen, List } from 'lucide-react';
+import { BookOpen, ChevronDown } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
-import { GlassCard } from '../ui/GlassCard';
 import { DayCard } from '../ui/DayCard';
+import { MethodSwitcher } from '../ui/MethodSwitcher';
+import { MethodIcon } from '../ui/MethodIcon';
+import { getMethod } from '../../data/methods';
 import { GlossaryScreen } from './GlossaryScreen';
 import { RecipesScreen } from './RecipesScreen';
 
 const PHASES = ['Fundamentos', 'Variables', 'Los 4 fondos', 'Campeones', 'Cierre'];
 
-export function HomeScreen({ state, onDayClick, onChangeMethod }) {
+export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetMethod }) {
   const [glossaryOpen, setGlossaryOpen] = useState(false);
   const [recipesOpen, setRecipesOpen] = useState(false);
-  const completedCount = Object.keys(state.completed).length;
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+
+  const completedCount = Object.keys(state.completed || {}).length;
   const progress = (completedCount / 30) * 100;
+  const currentMethod = getMethod(method);
 
   if (glossaryOpen) {
     return <GlossaryScreen onBack={() => setGlossaryOpen(false)} />;
@@ -33,13 +38,21 @@ export function HomeScreen({ state, onDayClick, onChangeMethod }) {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: C.bgGradient, paddingBottom: 32 }}>
-      <div style={{ padding: '32px 20px 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, justifyContent: 'space-between' }}>
+    <div style={{ minHeight: '100vh', background: C.bg, paddingBottom: 32 }}>
+      {/* Header: marca + pill método + glosario */}
+      <div style={{ padding: '20px 20px 14px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <img src="/zeris-logo.svg" alt="Zeri's Coffee" width={36} height={36} style={{ display: 'block' }} />
-            <div style={{ fontSize: 10, letterSpacing: '4px', color: C.accent, fontWeight: 700 }}>
-              ZERI'S COFFEE · CÁCERES
+            <img src="/zeris-logo.svg" alt="Zeri's Coffee" width={34} height={34} style={{ display: 'block' }} />
+            <div style={{ fontSize: 9, letterSpacing: '3px', color: C.text, fontWeight: 700 }}>
+              ZERI'S COFFEE
             </div>
           </div>
           <button
@@ -54,55 +67,124 @@ export function HomeScreen({ state, onDayClick, onChangeMethod }) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: C.pour,
+              color: C.text,
               cursor: 'pointer',
-              boxShadow: C.shadowOutSoft,
               flexShrink: 0,
+              boxShadow: C.shadowOutSoft,
             }}
           >
-            <BookOpen size={17} strokeWidth={2} />
+            <BookOpen size={16} strokeWidth={2} />
           </button>
         </div>
-        <h1 style={{ color: C.text, fontSize: 36, fontWeight: 200, lineHeight: 0.95, marginTop: 10, letterSpacing: '-1.5px' }}>
+
+        {/* Pill de método: tap → abre MethodSwitcher */}
+        <button
+          onClick={() => setSwitcherOpen(true)}
+          style={{
+            marginTop: 18,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            background: C.surface,
+            border: 'none',
+            borderRadius: 999,
+            padding: '8px 16px 8px 10px',
+            cursor: 'pointer',
+            color: C.text,
+            boxShadow: C.shadowOutSoft,
+          }}
+        >
+          <span
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: '50%',
+              background: C.surface,
+              boxShadow: C.shadowInSoft,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: C.text,
+            }}
+          >
+            <MethodIcon id={method} size={18} />
+          </span>
+          <span style={{ fontSize: 9, letterSpacing: '2px', color: C.textFaint, fontWeight: 700, textTransform: 'uppercase' }}>
+            Reto activo
+          </span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: C.text, letterSpacing: '-0.2px' }}>
+            {currentMethod?.name || 'Método'}
+          </span>
+          <ChevronDown size={14} style={{ color: C.textMute, marginLeft: 2 }} />
+        </button>
+      </div>
+
+      {/* Hero */}
+      <div style={{ padding: '8px 20px 20px' }}>
+        <h1 style={{ color: C.text, fontSize: 44, fontWeight: 200, lineHeight: 0.95, letterSpacing: '-2px', margin: 0 }}>
           30 días
           <br />
-          <span style={{ color: C.accent, fontWeight: 700 }}>con OREA</span>
+          <span style={{ fontWeight: 700 }}>con {currentMethod?.id === 'orea' ? 'OREA' : currentMethod?.name || 'tu cafetera'}</span>
         </h1>
+      </div>
 
-        <GlassCard strong style={{ padding: 18, marginTop: 24 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-            <span style={{ fontSize: 10, color: C.textFaint, letterSpacing: '2px', fontWeight: 700 }}>TU PROGRESO</span>
+      {/* Progreso */}
+      <div style={{ padding: '0 20px 22px' }}>
+        <div
+          style={{
+            padding: '20px 22px',
+            border: 'none',
+            borderRadius: 20,
+            background: C.surface,
+            boxShadow: C.shadowOut,
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
+            <span style={{ fontSize: 10, color: C.textFaint, letterSpacing: '2px', fontWeight: 700, textTransform: 'uppercase' }}>
+              Tu progreso
+            </span>
             <span>
-              <span style={{ fontSize: 22, color: C.accent, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{completedCount}</span>
+              <span style={{ fontSize: 28, color: C.text, fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-1px' }}>
+                {completedCount}
+              </span>
               <span style={{ fontSize: 14, color: C.textFaint }}> / 30</span>
             </span>
           </div>
-          <div style={{ height: 8, borderRadius: 4, background: 'rgba(90,53,25,0.08)', overflow: 'hidden' }}>
+          <div style={{ height: 4, borderRadius: 2, background: C.surfaceMute, overflow: 'hidden' }}>
             <div
               style={{
                 height: '100%',
                 width: `${progress}%`,
-                background: `linear-gradient(90deg, ${C.accent}, ${C.accentBright})`,
-                borderRadius: 4,
+                background: C.text,
+                borderRadius: 2,
                 transition: 'width 0.5s ease',
               }}
             />
           </div>
-        </GlassCard>
+        </div>
       </div>
 
+      {/* Fases y días */}
       <div style={{ padding: '0 20px' }}>
         {PHASES.map((phase) => {
           const phaseDays = DAYS.filter((d) => d.phase === phase);
-          const phaseDone = phaseDays.filter((d) => state.completed[d.num]).length;
+          const phaseDone = phaseDays.filter((d) => state.completed?.[d.num]).length;
           return (
-            <div key={phase} style={{ marginBottom: 28 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                <span style={{ fontSize: 10, letterSpacing: '3px', color: C.accent, fontWeight: 700, textTransform: 'uppercase' }}>
+            <div key={phase} style={{ marginBottom: 30 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                <span style={{ fontSize: 10, letterSpacing: '3px', color: C.text, fontWeight: 700, textTransform: 'uppercase' }}>
                   {phase}
                 </span>
-                <div style={{ flex: 1, height: 1, background: C.divider }} />
-                <span style={{ fontSize: 11, color: C.textFaint, fontWeight: 600 }}>
+                <div style={{ flex: 1, height: 1, background: C.border }} />
+                <span
+                  style={{
+                    fontSize: 11,
+                    color: C.textFaint,
+                    fontWeight: 700,
+                    fontVariantNumeric: 'tabular-nums',
+                    letterSpacing: '0.5px',
+                  }}
+                >
                   {phaseDone}/{phaseDays.length}
                 </span>
               </div>
@@ -110,7 +192,7 @@ export function HomeScreen({ state, onDayClick, onChangeMethod }) {
                 <DayCard
                   key={day.num}
                   day={day}
-                  completed={!!state.completed[day.num]}
+                  completed={!!state.completed?.[day.num]}
                   onClick={() => onDayClick(day.num)}
                 />
               ))}
@@ -119,30 +201,29 @@ export function HomeScreen({ state, onDayClick, onChangeMethod }) {
         })}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginTop: 16 }}>
-        {onChangeMethod && (
-          <button
-            onClick={onChangeMethod}
-            style={{
-              background: C.surface,
-              border: 'none',
-              borderRadius: 14,
-              padding: '8px 16px',
-              fontSize: 11,
-              letterSpacing: '1.5px',
-              fontWeight: 700,
-              color: C.textMute,
-              cursor: 'pointer',
-              boxShadow: C.shadowOutSoft,
-            }}
-          >
-            CAMBIAR DE MÉTODO
-          </button>
-        )}
-        <div style={{ textAlign: 'center', color: C.textFaint, fontSize: 10, letterSpacing: '2px' }}>
-          ZERISCOFFEE.COM
-        </div>
+      {/* Footer */}
+      <div style={{ textAlign: 'center', color: C.textFaint, fontSize: 10, letterSpacing: '2px', marginTop: 8 }}>
+        ZERISCOFFEE.COM
       </div>
+
+      {/* Switcher de método */}
+      <MethodSwitcher
+        open={switcherOpen}
+        current={method}
+        onClose={() => setSwitcherOpen(false)}
+        onSwitchMethod={(id) => {
+          setSwitcherOpen(false);
+          onSwitchMethod(id);
+        }}
+        onOpenRecipes={() => {
+          setSwitcherOpen(false);
+          setRecipesOpen(true);
+        }}
+        onResetMethod={() => {
+          setSwitcherOpen(false);
+          onResetMethod();
+        }}
+      />
     </div>
   );
 }

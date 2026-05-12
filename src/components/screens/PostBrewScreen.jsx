@@ -156,7 +156,7 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
             justifyContent: 'center',
             gap: 10,
             cursor: 'pointer',
-            boxShadow: '0 8px 24px rgba(194,65,12,0.3)',
+            boxShadow: C.shadowStrong,
           }}
         >
           <BookOpen size={20} />
@@ -292,7 +292,7 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
             justifyContent: 'center',
             gap: 10,
             cursor: 'pointer',
-            boxShadow: '0 8px 24px rgba(194,65,12,0.3)',
+            boxShadow: C.shadowStrong,
           }}
         >
           <Lightbulb size={20} />
@@ -375,7 +375,7 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
             justifyContent: 'center',
             gap: 10,
             cursor: 'pointer',
-            boxShadow: '0 8px 24px rgba(194,65,12,0.3)',
+            boxShadow: C.shadowStrong,
           }}
         >
           <BookOpen size={20} />
@@ -444,7 +444,7 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            boxShadow: isDictating ? '0 0 0 4px rgba(220,38,38,0.2)' : '0 4px 14px rgba(194,65,12,0.3)',
+            boxShadow: isDictating ? '0 0 0 4px rgba(201,82,82,0.18)' : C.shadowStrong,
             animation: isDictating ? 'softPulse 1.5s infinite' : 'none',
           }}
         >

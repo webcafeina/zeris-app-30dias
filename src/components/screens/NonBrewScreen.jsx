@@ -126,7 +126,7 @@ export function NonBrewScreen({ day, onBack, onComplete }) {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(194,65,12,0.3)',
+              boxShadow: C.shadowStrong,
               animation: isDictating ? 'softPulse 1.5s infinite' : 'none',
             }}
           >

@@ -157,7 +157,7 @@ export function CarouselScreen({ day, onBack, onContinue }) {
             justifyContent: 'center',
             gap: 8,
             cursor: 'pointer',
-            boxShadow: '0 8px 24px rgba(194,65,12,0.3)',
+            boxShadow: C.shadowStrong,
           }}
         >
           {idx === slides.length - 1 ? 'VER EJERCICIO' : 'SIGUIENTE'}

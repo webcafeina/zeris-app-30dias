@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { ChevronRight, BookOpen, Sparkles, Tag } from 'lucide-react';
+import { ChevronRight, BookOpen, Tag } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { METHODS } from '../../data/methods';
 import { MethodIcon } from '../ui/MethodIcon';
 import { GlossaryScreen } from './GlossaryScreen';
 
-// Pantalla inicial: selecciona método de extracción.
-// Hoy solo OREA está habilitado; el resto muestra badge "PRÓXIMAMENTE".
+// Pantalla inicial: elige método de extracción.
+// Solo OREA habilitado; los demás marcados PRÓXIMAMENTE.
 export function MethodScreen({ onSelect }) {
   const [glossaryOpen, setGlossaryOpen] = useState(false);
-  const [pendingMethod, setPendingMethod] = useState(null); // para mostrar mensaje "próximamente"
+  const [pendingMethod, setPendingMethod] = useState(null);
 
   if (glossaryOpen) {
     return <GlossaryScreen onBack={() => setGlossaryOpen(false)} />;
@@ -17,18 +17,10 @@ export function MethodScreen({ onSelect }) {
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg, paddingBottom: 28 }}>
-      {/* Header con logo + glosario */}
-      <div
-        style={{
-          padding: '28px 20px 18px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+      <div style={{ padding: '24px 20px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="/zeris-logo.svg" alt="Zeri's Coffee" width={40} height={40} style={{ display: 'block' }} />
-          <div style={{ fontSize: 10, letterSpacing: '4px', color: C.accent, fontWeight: 700 }}>
+          <img src="/zeris-logo.svg" alt="Zeri's Coffee" width={36} height={36} style={{ display: 'block' }} />
+          <div style={{ fontSize: 9, letterSpacing: '3px', color: C.text, fontWeight: 700 }}>
             ZERI'S COFFEE · CÁCERES
           </div>
         </div>
@@ -37,68 +29,49 @@ export function MethodScreen({ onSelect }) {
           aria-label="Abrir glosario"
           style={{
             background: C.surface,
-            border: 'none',
+            border: `1px solid ${C.border}`,
             borderRadius: '50%',
-            width: 38,
-            height: 38,
+            width: 36,
+            height: 36,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: C.pour,
+            color: C.text,
             cursor: 'pointer',
-            boxShadow: C.shadowOutSoft,
-            flexShrink: 0,
           }}
         >
-          <BookOpen size={17} strokeWidth={2} />
+          <BookOpen size={16} strokeWidth={2} />
         </button>
       </div>
 
       {/* Hero */}
-      <div style={{ padding: '8px 20px 20px' }}>
-        <h1
-          style={{
-            color: C.text,
-            fontSize: 42,
-            fontWeight: 200,
-            lineHeight: 0.95,
-            letterSpacing: '-1.8px',
-            margin: 0,
-          }}
-        >
+      <div style={{ padding: '12px 20px 28px' }}>
+        <h1 style={{ color: C.text, fontSize: 50, fontWeight: 200, lineHeight: 0.95, letterSpacing: '-2.5px', margin: 0 }}>
           30 días
           <br />
-          <span style={{ color: C.accent, fontWeight: 700 }}>con tu cafetera</span>
+          <span style={{ fontWeight: 700 }}>con tu cafetera</span>
         </h1>
-        <p
-          style={{
-            color: C.textMute,
-            fontSize: 14,
-            lineHeight: 1.55,
-            marginTop: 16,
-            maxWidth: 460,
-          }}
-        >
+        <p style={{ color: C.textMute, fontSize: 14.5, lineHeight: 1.55, marginTop: 18, maxWidth: 460 }}>
           Te vamos a ayudar a sacar el máximo rendimiento al café de especialidad que ya estás tomando. Elige el método con el que quieres hacer el reto.
         </p>
       </div>
 
-      {/* Selector de métodos */}
-      <div style={{ padding: '0 20px 20px' }}>
+      {/* Selector */}
+      <div style={{ padding: '0 4px 20px' }}>
         <div
           style={{
             fontSize: 10,
             letterSpacing: '3px',
             color: C.textFaint,
             fontWeight: 700,
-            marginBottom: 14,
             textTransform: 'uppercase',
+            padding: '0 16px 10px',
           }}
         >
           Elige tu método
         </div>
 
-        {METHODS.map((method) => {
+        {METHODS.map((method, i) => {
           const isAvailable = method.available;
           return (
             <button
@@ -114,76 +87,56 @@ export function MethodScreen({ onSelect }) {
               style={{
                 width: '100%',
                 textAlign: 'left',
-                background: C.surface,
-                border: 'none',
-                borderRadius: 20,
-                padding: 16,
-                marginBottom: 12,
-                boxShadow: C.shadowOutSoft,
+                background: 'transparent',
+                borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
+                borderBottom: `1px solid ${C.border}`,
+                borderLeft: 'none',
+                borderRight: 'none',
+                padding: '18px 20px',
                 cursor: 'pointer',
                 display: 'flex',
-                gap: 14,
+                gap: 16,
                 alignItems: 'center',
-                opacity: isAvailable ? 1 : 0.72,
-                transition: 'box-shadow 0.18s, transform 0.18s',
+                opacity: isAvailable ? 1 : 0.6,
+                transition: 'background 0.15s',
               }}
-              onTouchStart={(e) => {
-                if (isAvailable) e.currentTarget.style.boxShadow = C.shadowInSoft;
-              }}
-              onTouchEnd={(e) => {
-                e.currentTarget.style.boxShadow = C.shadowOutSoft;
-              }}
-              onMouseDown={(e) => {
-                if (isAvailable) e.currentTarget.style.boxShadow = C.shadowInSoft;
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.boxShadow = C.shadowOutSoft;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = C.shadowOutSoft;
-              }}
+              onMouseEnter={(e) => { if (isAvailable) e.currentTarget.style.background = C.surfaceMute; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+              onTouchStart={(e) => { if (isAvailable) e.currentTarget.style.background = C.surfaceMute; }}
+              onTouchEnd={(e) => { e.currentTarget.style.background = 'transparent'; }}
             >
               <div
                 style={{
-                  width: 56,
-                  height: 56,
+                  width: 54,
+                  height: 54,
                   flexShrink: 0,
-                  borderRadius: 16,
-                  background: C.surface,
-                  boxShadow: C.shadowInSoft,
+                  borderRadius: 14,
+                  border: `1px solid ${C.border}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: isAvailable ? C.accent : C.textFaint,
+                  color: C.text,
                 }}
               >
-                <MethodIcon id={method.id} size={32} />
+                <MethodIcon id={method.id} size={30} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div
-                  style={{
-                    color: C.text,
-                    fontSize: 15.5,
-                    fontWeight: 700,
-                    letterSpacing: '-0.2px',
-                    lineHeight: 1.2,
-                  }}
-                >
+                <div style={{ color: C.text, fontSize: 17, fontWeight: 700, letterSpacing: '-0.3px', lineHeight: 1.2 }}>
                   {method.name}
                 </div>
                 <div
                   style={{
                     color: C.textFaint,
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: '1px',
+                    fontSize: 10,
+                    fontWeight: 700,
+                    letterSpacing: '1.5px',
                     textTransform: 'uppercase',
-                    marginTop: 3,
+                    marginTop: 4,
                   }}
                 >
                   {method.category}
                 </div>
-                <div style={{ color: C.textMute, fontSize: 12.5, lineHeight: 1.45, marginTop: 6 }}>
+                <div style={{ color: C.textMute, fontSize: 12.5, lineHeight: 1.5, marginTop: 6 }}>
                   {method.description}
                 </div>
                 {pendingMethod === method.id && (
@@ -201,7 +154,7 @@ export function MethodScreen({ onSelect }) {
                   </div>
                 )}
               </div>
-              <div style={{ flexShrink: 0, color: isAvailable ? C.accent : C.textFaint }}>
+              <div style={{ flexShrink: 0, color: isAvailable ? C.text : C.textFaint }}>
                 {isAvailable ? (
                   <ChevronRight size={22} />
                 ) : (
@@ -210,10 +163,6 @@ export function MethodScreen({ onSelect }) {
                       fontSize: 9,
                       fontWeight: 700,
                       letterSpacing: '1.5px',
-                      padding: '4px 8px',
-                      borderRadius: 8,
-                      background: C.surface,
-                      boxShadow: C.shadowInSoft,
                       color: C.textFaint,
                       whiteSpace: 'nowrap',
                     }}
@@ -227,23 +176,22 @@ export function MethodScreen({ onSelect }) {
         })}
       </div>
 
-      {/* Bloque promo */}
+      {/* Promo */}
       <div style={{ padding: '8px 20px 24px' }}>
         <div
           style={{
-            background: C.surface,
-            borderRadius: 22,
-            padding: 18,
-            boxShadow: C.shadowOutSoft,
+            border: `1px solid ${C.border}`,
+            borderRadius: 18,
+            padding: 20,
+            background: C.surfaceMute,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <Sparkles size={14} style={{ color: C.accent }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
             <span
               style={{
                 fontSize: 10,
                 letterSpacing: '2.5px',
-                color: C.accent,
+                color: C.text,
                 fontWeight: 700,
                 textTransform: 'uppercase',
               }}
@@ -257,16 +205,13 @@ export function MethodScreen({ onSelect }) {
               display: 'flex',
               alignItems: 'center',
               gap: 12,
-              padding: 14,
-              background: C.surface,
-              boxShadow: C.shadowInSoft,
-              borderRadius: 16,
-              marginBottom: 10,
+              padding: '14px 0',
+              borderBottom: `1px solid ${C.border}`,
             }}
           >
-            <Tag size={20} style={{ color: C.accent, flexShrink: 0 }} />
+            <Tag size={20} style={{ color: C.text, flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13.5, color: C.text, fontWeight: 700, letterSpacing: '-0.2px' }}>
+              <div style={{ fontSize: 14, color: C.text, fontWeight: 700, letterSpacing: '-0.2px' }}>
                 10% en tu primera compra
               </div>
               <div style={{ fontSize: 12, color: C.textMute, marginTop: 2 }}>
@@ -275,7 +220,7 @@ export function MethodScreen({ onSelect }) {
                   style={{
                     fontFamily: 'ui-monospace, SF Mono, Menlo, monospace',
                     fontWeight: 700,
-                    color: C.accent,
+                    color: C.text,
                     letterSpacing: '0.5px',
                   }}
                 >
@@ -285,18 +230,11 @@ export function MethodScreen({ onSelect }) {
             </div>
           </div>
 
-          <div
-            style={{
-              padding: '12px 14px',
-              borderRadius: 14,
-              background: C.surface,
-              boxShadow: C.shadowInSoft,
-            }}
-          >
-            <div style={{ fontSize: 13, color: C.text, fontWeight: 600, lineHeight: 1.4 }}>
+          <div style={{ padding: '14px 0 4px' }}>
+            <div style={{ fontSize: 14, color: C.text, fontWeight: 600, letterSpacing: '-0.2px' }}>
               Suscripción reto de 30 días
             </div>
-            <div style={{ fontSize: 12, color: C.textMute, marginTop: 4, lineHeight: 1.45 }}>
+            <div style={{ fontSize: 12, color: C.textMute, marginTop: 4, lineHeight: 1.5 }}>
               Descuento especial al combinar la máquina + el café que necesitas para experimentar todo el mes.
             </div>
           </div>
@@ -307,14 +245,15 @@ export function MethodScreen({ onSelect }) {
             rel="noopener noreferrer"
             style={{
               display: 'block',
-              marginTop: 14,
+              marginTop: 12,
               textAlign: 'center',
               fontSize: 11,
-              color: C.pour,
+              color: C.text,
               fontWeight: 700,
               letterSpacing: '1.5px',
               textTransform: 'uppercase',
-              textDecoration: 'none',
+              textDecoration: 'underline',
+              textUnderlineOffset: '3px',
             }}
           >
             Ver en zeriscoffee.com →
