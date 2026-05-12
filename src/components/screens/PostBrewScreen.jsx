@@ -526,6 +526,34 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
           {shareCaption}
         </pre>
 
+        {/* Toast persistente de confirmación. Aparece durante 2.5s tras copiar
+            para que quede inequívocamente claro que el texto está en el
+            portapapeles y se puede pegar en Instagram. */}
+        {captionCopied && (
+          <div
+            role="status"
+            aria-live="polite"
+            style={{
+              marginTop: 12,
+              padding: '10px 14px',
+              background: C.text,
+              color: '#FFF',
+              borderRadius: 12,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '1px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              boxShadow: C.shadowOutSoft,
+              animation: 'fadeInFromBottom 0.25s ease',
+            }}
+          >
+            <Check size={16} strokeWidth={3} />
+            Texto copiado al portapapeles · pégalo al subir la foto en Instagram
+          </div>
+        )}
+
         <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
           <button
             onClick={copyCaption}
