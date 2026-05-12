@@ -4,6 +4,7 @@ import { loadState, saveState } from './lib/storage';
 import { HomeScreen } from './components/screens/HomeScreen';
 import { CarouselScreen } from './components/screens/CarouselScreen';
 import { TimelineScreen } from './components/screens/TimelineScreen';
+import { PrepScreen } from './components/screens/PrepScreen';
 import { CountdownScreen } from './components/screens/CountdownScreen';
 import { BrewRunningScreen } from './components/screens/BrewRunningScreen';
 import { PostBrewScreen } from './components/screens/PostBrewScreen';
@@ -69,7 +70,11 @@ export default function App() {
   }
 
   if (subScreen === 'timeline') {
-    return <TimelineScreen day={day} onBack={() => setSubScreen('carousel')} onStart={() => setSubScreen('countdown')} />;
+    return <TimelineScreen day={day} onBack={() => setSubScreen('carousel')} onStart={() => setSubScreen('prep')} />;
+  }
+
+  if (subScreen === 'prep') {
+    return <PrepScreen day={day} onBack={() => setSubScreen('timeline')} onContinue={() => setSubScreen('countdown')} />;
   }
 
   if (subScreen === 'countdown') {
