@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, ChevronDown, Coffee, Instagram, ArrowRight, Notebook } from 'lucide-react';
+import { BookOpen, ChevronDown, Coffee, Instagram, ArrowRight, Notebook, Tag, Package } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
 import { DayCard } from '../ui/DayCard';
@@ -347,6 +347,93 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
         >
           zeriscoffee.com
         </a>
+      </div>
+
+      {/* Promo: descuento de bienvenida + pack-reto. Visible siempre desde
+          Home para que la oferta no quede solo enterrada en MethodScreen. */}
+      <div style={{ padding: '20px 20px 8px' }}>
+        <div
+          style={{
+            background: C.surface,
+            border: `1px solid ${C.border}`,
+            borderRadius: 18,
+            padding: 18,
+            boxShadow: C.shadowOutSoft,
+          }}
+        >
+          <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.text, fontWeight: 700, textTransform: 'uppercase', marginBottom: 12 }}>
+            Promos de Zeri's
+          </div>
+
+          {/* Pack reto: máquina + café para todo el mes */}
+          <div
+            style={{
+              display: 'flex',
+              gap: 12,
+              alignItems: 'flex-start',
+              padding: '12px 0',
+              borderBottom: `1px solid ${C.border}`,
+            }}
+          >
+            <Package size={20} style={{ color: C.text, flexShrink: 0, marginTop: 2 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13.5, color: C.text, fontWeight: 700, letterSpacing: '-0.2px' }}>
+                Pack reto 30 días
+              </div>
+              <p style={{ margin: '4px 0 0', fontSize: 12, color: C.textMute, lineHeight: 1.5 }}>
+                Descuento especial al llevarte la <strong style={{ color: C.text }}>máquina + el café</strong> que necesitas para experimentar todo el mes. Una suscripción pensada justo para hacer este reto.
+              </p>
+              <a
+                href={`${ZERIS.website}/tienda/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-block',
+                  marginTop: 6,
+                  fontSize: 10,
+                  color: C.text,
+                  fontWeight: 700,
+                  letterSpacing: '1.5px',
+                  textTransform: 'uppercase',
+                  textDecoration: 'underline',
+                  textUnderlineOffset: '3px',
+                }}
+              >
+                Ver el pack →
+              </a>
+            </div>
+          </div>
+
+          {/* CAFETAZO10 */}
+          <div
+            style={{
+              display: 'flex',
+              gap: 12,
+              alignItems: 'flex-start',
+              padding: '14px 0 4px',
+            }}
+          >
+            <Tag size={20} style={{ color: C.text, flexShrink: 0, marginTop: 2 }} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13.5, color: C.text, fontWeight: 700, letterSpacing: '-0.2px' }}>
+                10% en tu primera compra
+              </div>
+              <div style={{ fontSize: 12, color: C.textMute, marginTop: 4 }}>
+                Código:{' '}
+                <span
+                  style={{
+                    fontFamily: 'ui-monospace, SF Mono, Menlo, monospace',
+                    fontWeight: 700,
+                    color: C.text,
+                    letterSpacing: '0.5px',
+                  }}
+                >
+                  {ZERIS.discount?.code || 'CAFETAZO10'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Switcher de método */}
