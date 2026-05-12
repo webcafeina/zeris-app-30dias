@@ -3,7 +3,9 @@ import { ChevronLeft, ArrowRight } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { GlassCard } from '../ui/GlassCard';
 import { BaristaCard } from '../ui/BaristaCard';
+import { OreaPhoto } from '../ui/OreaPhoto';
 import { getBarista } from '../../data/baristas';
+import { OREA_PHOTOS } from '../../data/photos';
 
 export function CarouselScreen({ day, onBack, onContinue }) {
   const [idx, setIdx] = useState(0);
@@ -63,6 +65,13 @@ export function CarouselScreen({ day, onBack, onContinue }) {
         <h2 style={{ color: C.text, fontSize: 30, fontWeight: 700, lineHeight: 1.1, letterSpacing: '-1px', marginBottom: 20 }}>
           {slide.title}
         </h2>
+
+        {/* Hero photo del slide cuando viene marcado con photoId. */}
+        {slide.photoId && OREA_PHOTOS[slide.photoId] && (
+          <div style={{ marginBottom: 18 }}>
+            <OreaPhoto src={OREA_PHOTOS[slide.photoId]} alt={slide.title} radius={20} aspect="4/3" />
+          </div>
+        )}
 
         <GlassCard strong style={{ padding: 24 }}>
           <p style={{ color: C.text, fontSize: 16, lineHeight: 1.55, fontWeight: 400 }}>

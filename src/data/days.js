@@ -11,8 +11,8 @@ export const DAYS = [
     num: 1, phase: 'Fundamentos', title: 'Reconoce tu OREA', type: 'brew', baristaId: 'hoffmann',
     objective: 'Familiarizarte con los gestos. No buscas la taza perfecta hoy: solo observa cómo cae el agua, cómo se hincha el café, cómo queda el lecho.',
     carousel: [
-      { title: 'Hoy es día de ritual', text: 'No buscas la taza perfecta. Buscas familiarizarte con los gestos. Monta el FAST, enjuaga el filtro con agua hirviendo (abundante — ese sabor a papel arruina tazas), y ejecuta la receta sin obsesión por los tiempos.' },
-      { title: 'Qué observar', text: 'Cómo cae el agua. Cómo se hincha el café en el bloom. Cómo queda el lecho al final. La técnica viene después; primero es el ritual.' },
+      { title: 'Hoy es día de ritual', text: 'No buscas la taza perfecta. Buscas familiarizarte con los gestos. Monta el FAST, enjuaga el filtro con agua hirviendo (abundante — ese sabor a papel arruina tazas), y ejecuta la receta sin obsesión por los tiempos.', photoId: 'threeQuarter' },
+      { title: 'Qué observar', text: 'Cómo cae el agua. Cómo se hincha el café en el bloom. Cómo queda el lecho al final. La técnica viene después; primero es el ritual.', photoId: 'topView' },
       { title: 'Vídeo recomendado', text: 'James Hoffmann · "The Ultimate V60 Technique" (15 min). No es OREA, pero los fundamentos del swirl, bloom y vertido circular son idénticos. La base de todo.', video: 'youtube.com/watch?v=AI4ynXzkSQo' , youtubeId: 'AI4ynXzkSQo' },
       { title: 'Antes de empezar', text: 'Pesa 14 g de café en grano. Calienta agua a 94 °C. Muele justo antes de preparar — nunca antes. Enjuaga el filtro con 100 g de agua caliente y tira esa agua.' },
     ],

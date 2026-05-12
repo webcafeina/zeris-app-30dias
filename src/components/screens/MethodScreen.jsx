@@ -3,6 +3,8 @@ import { ChevronRight, BookOpen, Tag } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { METHODS } from '../../data/methods';
 import { MethodIcon } from '../ui/MethodIcon';
+import { OreaPhoto } from '../ui/OreaPhoto';
+import { OREA_PHOTOS } from '../../data/photos';
 import { GlossaryScreen } from './GlossaryScreen';
 
 // Pantalla inicial: elige método de extracción.
@@ -44,9 +46,19 @@ export function MethodScreen({ onSelect }) {
         </button>
       </div>
 
-      {/* Hero */}
-      <div style={{ padding: '12px 20px 28px' }}>
-        <h1 style={{ color: C.text, fontSize: 50, fontWeight: 200, lineHeight: 0.95, letterSpacing: '-2.5px', margin: 0 }}>
+      {/* Hero photo */}
+      <div style={{ padding: '0 20px 20px' }}>
+        <OreaPhoto
+          src={OREA_PHOTOS.threeQuarter}
+          alt="OREA V4 Narrow sobre jarra de cristal"
+          radius={20}
+          aspect="4/3"
+        />
+      </div>
+
+      {/* Hero text */}
+      <div style={{ padding: '4px 20px 28px' }}>
+        <h1 style={{ color: C.text, fontSize: 46, fontWeight: 200, lineHeight: 0.95, letterSpacing: '-2.2px', margin: 0 }}>
           30 días
           <br />
           <span style={{ fontWeight: 700 }}>con tu cafetera</span>

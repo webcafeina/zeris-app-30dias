@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ChevronLeft, Check, ArrowRight, Clock } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { warmUpVoice } from '../../lib/voice';
+import { OreaPhoto } from '../ui/OreaPhoto';
+import { OREA_PHOTOS, BOTTOM_PHOTO } from '../../data/photos';
 
 // Extrae el rango de clicks de un texto tipo "Media-fina (21–25 clicks Comandante)".
 // Devuelve "21-25 clicks" o null si no encuentra patrón. Crítico: el click es lo
@@ -104,6 +106,17 @@ export function PrepScreen({ day, onBack, onContinue }) {
           <ChevronLeft size={20} />
           <span style={{ fontSize: 13 }}>Volver</span>
         </button>
+      </div>
+
+      {/* Hero photo: la cafetera montada sobre la jarra de cristal,
+          consistente con el primer paso ("Monta la cafetera sobre la báscula"). */}
+      <div style={{ padding: '0 20px 18px' }}>
+        <OreaPhoto
+          src={BOTTOM_PHOTO[day.bottom] || OREA_PHOTOS.onServer}
+          alt={`Receta del día ${day.num}`}
+          radius={18}
+          aspect="16/10"
+        />
       </div>
 
       <div style={{ padding: '0 20px 28px' }}>

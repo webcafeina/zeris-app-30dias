@@ -38,12 +38,12 @@ export function ChallengeScreen({ onBack }) {
           RETO EN REDES
         </div>
         <h2 style={{ color: C.text, fontSize: 38, fontWeight: 200, lineHeight: 0.98, marginTop: 8, letterSpacing: '-1.8px' }}>
-          Comparte
+          30 fotos,
           <br />
-          <span style={{ fontWeight: 700 }}>tu mes con Zeri's</span>
+          <span style={{ fontWeight: 700 }}>30 días, 1 descuento</span>
         </h2>
         <p style={{ color: C.textMute, fontSize: 14, lineHeight: 1.55, marginTop: 16 }}>
-          Si subes <strong style={{ color: C.text }}>5 o 6 fotos a Instagram</strong> durante 5 o 6 días de tu reto, te enviamos un <strong style={{ color: C.text }}>descuento especial</strong> para tu próxima compra de café — abonado automáticamente a tu panel de usuario en zeriscoffee.com.
+          Sube <strong style={{ color: C.text }}>1 foto por día</strong> a Instagram (o agrupa de 3 en 3 si un día se te escapa). Cuando llegues a <strong style={{ color: C.text }}>30 fotos</strong> abonamos un <strong style={{ color: C.text }}>descuento especial</strong> a tu panel de usuario en zeriscoffee.com.
         </p>
       </div>
 
@@ -66,10 +66,10 @@ export function ChallengeScreen({ onBack }) {
 
           <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
             {[
-              <>Sube tus fotos en Instagram (público, no historia efímera).</>,
+              <>1 foto al día (lo ideal) o agrupa <strong style={{ color: C.text }}>mínimo 3 fotos por subida</strong> si batches varios días juntos.</>,
               <>Etiqueta <strong style={{ color: C.text }}>{IG_HANDLE}</strong> en cada foto.</>,
               <>Usa el hashtag <strong style={{ color: C.text }}>{HASHTAG}</strong>.</>,
-              <>De 5 a 6 fotos repartidas en 5 a 6 días distintos del reto.</>,
+              <>Cuando llegues a <strong style={{ color: C.text }}>30 fotos en total</strong>, el descuento se desbloquea automáticamente.</>,
             ].map((item, i) => (
               <li
                 key={i}

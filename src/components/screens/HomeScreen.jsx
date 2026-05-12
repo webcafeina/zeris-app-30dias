@@ -196,7 +196,7 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
               Reto en redes
             </div>
             <div style={{ fontSize: 13.5, color: C.text, fontWeight: 700, letterSpacing: '-0.2px', lineHeight: 1.25, marginTop: 2 }}>
-              Sube 5 fotos y consigue descuento
+              1 foto al día → 30 fotos → descuento
             </div>
           </div>
           <ArrowRight size={16} style={{ color: C.textFaint, flexShrink: 0 }} />
