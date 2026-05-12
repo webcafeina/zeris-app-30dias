@@ -140,6 +140,23 @@ export function BrewRunningScreen({ day, onFinish }) {
   // la lógica de color rojo se ha retirado.
   const inUrgency = false;
 
+  // Cuando estamos en drawdown (no hay nextStep) y el tiempo total ha
+  // superado el rango objetivo, asumimos que el café ya ha terminado de
+  // gotear y avisamos al usuario para que toque "Terminar".
+  const inDrawdown = !nextStep;
+  const drawdownDone = inDrawdown && elapsed > targetMax;
+  const drawdownAnnouncedRef = useRef(false);
+
+  useEffect(() => {
+    if (drawdownDone && !drawdownAnnouncedRef.current) {
+      drawdownAnnouncedRef.current = true;
+      if (voiceOn) speak('Pulsa en Terminar', voiceOn);
+      beep(880, 0.25, 0.4);
+    }
+    // Si por alguna razón salimos del drawdown (raro), reseteamos.
+    if (!inDrawdown) drawdownAnnouncedRef.current = false;
+  }, [drawdownDone, inDrawdown, voiceOn]);
+
   const timeColor = (() => {
     if (elapsed < targetMin) return C.text;
     if (elapsed <= targetMax) return C.success;
@@ -360,26 +377,34 @@ export function BrewRunningScreen({ day, onFinish }) {
             </div>
           </div>
         ) : (
-          /* Drawdown: sin nextStep, mostramos placa */
-          <div
-            style={{
-              width: 260,
-              height: 260,
-              borderRadius: '50%',
-              background: C.surface,
-              boxShadow: C.shadowOut,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 6,
-            }}
-          >
-            <div style={{ fontSize: 9, letterSpacing: '3px', fontWeight: 700, color: C.accent }}>
-              DRAWDOWN
-            </div>
-            <div style={{ fontSize: 14, color: C.textMute, fontWeight: 600 }}>
-              Espera última gota
+          /* Drawdown: sin nextStep, mostramos placa centrada.
+             Cuando el café deja de gotear (elapsed > targetMax) la voz
+             anuncia "Pulsa en Terminar" y el texto cambia para reforzarlo. */
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div
+              style={{
+                width: 260,
+                height: 260,
+                borderRadius: '50%',
+                background: C.surface,
+                boxShadow: C.shadowOut,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                padding: '0 30px',
+                textAlign: 'center',
+                animation: drawdownDone ? 'cardPum 0.55s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+                transition: 'box-shadow 0.4s ease',
+              }}
+            >
+              <div style={{ fontSize: 9, letterSpacing: '3px', fontWeight: 700, color: C.text }}>
+                {drawdownDone ? 'CAFÉ LISTO' : 'DRAWDOWN'}
+              </div>
+              <div style={{ fontSize: drawdownDone ? 17 : 14, color: drawdownDone ? C.text : C.textMute, fontWeight: drawdownDone ? 700 : 600, lineHeight: 1.25, letterSpacing: drawdownDone ? '-0.2px' : 0 }}>
+                {drawdownDone ? 'Pulsa en TERMINAR' : 'Espera la última gota'}
+              </div>
             </div>
           </div>
         )}
