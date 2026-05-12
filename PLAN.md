@@ -41,7 +41,7 @@ Abre `http://localhost:5173` en el navegador del portátil. Los cambios se ven a
 
 - [x] Añadir `.claude/` al `.gitignore` (`node_modules/` y `dist/` ya estaban)
 - [x] Commitear `package-lock.json`
-- [ ] Conectar repo a Cloudflare Pages (ver Fase 4)
+- [x] Conectar repo a Cloudflare Pages (ver Fase 4)
 - [ ] Configurar protección de `main` (require PR, no force-push) en GitHub
 - [ ] Crear branch de trabajo `dev` y flujo PR → main
 
@@ -70,13 +70,13 @@ Antes de marcar, validar en navegador que cada flujo funciona end-to-end.
 
 ## Fase 4 — CI/CD y despliegue
 
-- [ ] **Cloudflare Pages**: conectar repo `webcafeina/zeris-app-30dias`
+- [x] **Cloudflare Pages**: conectado a `webcafeina/zeris-app-30dias`
   - Build command: `npm run build`
   - Output directory: `dist`
   - Variable de entorno: `NODE_VERSION=20`
   - Auto preview deployments en cada push (no-`main`) → URL única por commit
   - Production deployment en cada push a `main`
-- [ ] Anotar URL de producción en este plan y en `README.md`
+- [x] **URL de producción**: https://zeris-app-30dias.pages.dev (HTTP 200 verificado)
 - [ ] Configurar dominio (¿`30dias.zeriscoffee.com`? confirmar con Zeri's)
 - [ ] Verificar HTTPS y headers de seguridad
 - [ ] Smoke test en producción desde móvil real
@@ -100,4 +100,4 @@ Antes de marcar, validar en navegador que cada flujo funciona end-to-end.
 
 ---
 
-**Estado actual:** Fase 0 completa. Fase 1 en marcha (gitignore + lockfile listos). Próximo: conectar Cloudflare Pages.
+**Estado actual:** Infraestructura lista. App desplegada en https://zeris-app-30dias.pages.dev. Próximo: auditoría funcional de pantallas (Fase 2).

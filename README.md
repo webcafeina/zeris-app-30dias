@@ -2,6 +2,8 @@
 
 App móvil web complementaria a la guía PDF **"30 días con OREA"** de [Zeri's Coffee](https://zeriscoffee.com) (Cáceres). Acompaña al usuario durante 30 días de ejercicios estructurados con la cafetera de filtrado **OREA V4 Narrow**: brews guiados con timer + voz, días de cata, días de reflexión, motor de diagnóstico de la taza y cuaderno de notas con dictado.
 
+🌐 **Producción:** https://zeris-app-30dias.pages.dev (Cloudflare Pages, deploy automático en cada push a `main`)
+
 ## Stack
 
 - **Vite + React 18** (JavaScript)
