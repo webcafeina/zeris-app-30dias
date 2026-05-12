@@ -10,10 +10,12 @@ export function BackgroundOrbs() {
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 0,
+        // z-index -1 dentro del stacking context de #root → queda por
+        // DEBAJO del contenido de la app (header, cartas, etc).
+        // Con z-index 0 se renderizaba encima y tapaba el header.
+        zIndex: -1,
         pointerEvents: 'none',
         overflow: 'hidden',
-        background: '#FFFFFF',
       }}
     >
       <div className="zen-orb zen-orb-peach" />

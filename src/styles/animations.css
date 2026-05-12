@@ -77,9 +77,12 @@ html, body, #root {
   font-feature-settings: 'ss01', 'cv01', 'cv02';
 }
 
+/* #root es stacking context propio: aísla los z-index negativos de los
+   orbes (que están dentro) para que no se filtren bajo el body. */
 #root {
   position: relative;
-  z-index: 1;
+  z-index: 0;
+  isolation: isolate;
 }
 
 * {
