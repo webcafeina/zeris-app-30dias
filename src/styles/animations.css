@@ -39,8 +39,8 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: #EFEAE2;
-  color: #2A2520;
+  background: #FFFFFF;
+  color: #3A4151;
 }
 
 * {
