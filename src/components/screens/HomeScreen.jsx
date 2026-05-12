@@ -5,7 +5,9 @@ import { DAYS } from '../../data/days';
 import { DayCard } from '../ui/DayCard';
 import { MethodSwitcher } from '../ui/MethodSwitcher';
 import { MethodIcon } from '../ui/MethodIcon';
+import { SocialButton } from '../ui/SocialButton';
 import { getMethod } from '../../data/methods';
+import { ZERIS } from '../../data/zerisInfo';
 import { GlossaryScreen } from './GlossaryScreen';
 import { RecipesScreen } from './RecipesScreen';
 
@@ -201,9 +203,33 @@ export function HomeScreen({ state, method, onDayClick, onSwitchMethod, onResetM
         })}
       </div>
 
-      {/* Footer */}
-      <div style={{ textAlign: 'center', color: C.textFaint, fontSize: 10, letterSpacing: '2px', marginTop: 8 }}>
-        ZERISCOFFEE.COM
+      {/* Footer Zeri's: contacto + redes */}
+      <div style={{ padding: '20px 20px 4px', textAlign: 'center' }}>
+        <div style={{ fontSize: 9, color: C.textFaint, letterSpacing: '3px', fontWeight: 700, textTransform: 'uppercase', marginBottom: 14 }}>
+          Síguenos en Zeri's
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginBottom: 14 }}>
+          <SocialButton kind="website" href={ZERIS.website} />
+          <SocialButton kind="instagram" href={ZERIS.social.instagram} />
+          <SocialButton kind="facebook" href={ZERIS.social.facebook} />
+          <SocialButton kind="twitter" href={ZERIS.social.twitter} />
+        </div>
+        <a
+          href={ZERIS.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-block',
+            fontSize: 10,
+            color: C.textFaint,
+            letterSpacing: '2px',
+            fontWeight: 700,
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+          }}
+        >
+          zeriscoffee.com
+        </a>
       </div>
 
       {/* Switcher de método */}

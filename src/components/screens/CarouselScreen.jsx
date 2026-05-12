@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ChevronLeft, ArrowRight } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { GlassCard } from '../ui/GlassCard';
+import { BaristaCard } from '../ui/BaristaCard';
+import { getBarista } from '../../data/baristas';
 
 export function CarouselScreen({ day, onBack, onContinue }) {
   const [idx, setIdx] = useState(0);
@@ -102,10 +104,10 @@ export function CarouselScreen({ day, onBack, onContinue }) {
               style={{
                 marginTop: 16,
                 padding: '12px 16px',
-                background: C.accentLight,
+                background: C.surfaceMute,
                 borderRadius: 12,
                 fontSize: 12,
-                color: C.accent,
+                color: C.text,
                 fontWeight: 600,
                 wordBreak: 'break-all',
               }}
@@ -114,6 +116,15 @@ export function CarouselScreen({ day, onBack, onContinue }) {
             </div>
           )}
         </GlassCard>
+
+        {/* Tarjeta de barista: se muestra solo cuando este slide tiene vídeo
+            y el día referencia a un barista del glosario. Permite seguir
+            al autor de la receta o vídeo directamente desde aquí. */}
+        {(slide.youtubeId || slide.video) && day.baristaId && getBarista(day.baristaId) && (
+          <div style={{ marginTop: 16 }}>
+            <BaristaCard barista={getBarista(day.baristaId)} />
+          </div>
+        )}
       </div>
 
       <div style={{ padding: 20, display: 'flex', gap: 12 }}>

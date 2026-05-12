@@ -8,7 +8,7 @@ export const DAYS = [
   // FASE 1 — FUNDAMENTOS
   // ====================================================================
   {
-    num: 1, phase: 'Fundamentos', title: 'Reconoce tu OREA', type: 'brew',
+    num: 1, phase: 'Fundamentos', title: 'Reconoce tu OREA', type: 'brew', baristaId: 'hoffmann',
     objective: 'Familiarizarte con los gestos. No buscas la taza perfecta hoy: solo observa cómo cae el agua, cómo se hincha el café, cómo queda el lecho.',
     carousel: [
       { title: 'Hoy es día de ritual', text: 'No buscas la taza perfecta. Buscas familiarizarte con los gestos. Monta el FAST, enjuaga el filtro con agua hirviendo (abundante — ese sabor a papel arruina tazas), y ejecuta la receta sin obsesión por los tiempos.' },
@@ -29,7 +29,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 2, phase: 'Fundamentos', title: 'El bloom y el swirl', type: 'brew',
+    num: 2, phase: 'Fundamentos', title: 'El bloom y el swirl', type: 'brew', baristaId: 'hoffmann',
     objective: 'Foco total en los primeros 40 segundos. Sin un bloom correcto, todo lo demás falla.',
     carousel: [
       { title: 'El bloom no es decorativo', text: 'Es el momento en que el CO2 sale del café molido y el agua puede penetrar uniformemente. Sin un bloom correcto, la primera mitad de tu brew está subextraída y la segunda sobreextraída.' },
@@ -50,7 +50,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 3, phase: 'Fundamentos', title: 'Caudal de vertido', type: 'brew',
+    num: 3, phase: 'Fundamentos', title: 'Caudal de vertido', type: 'brew', baristaId: 'hedrick',
     objective: 'Caudal objetivo: 5 g/s. Es decir, 50 g de agua en 10 segundos. Practica primero con báscula vacía.',
     carousel: [
       { title: 'OREA recomienda 5 g/s', text: 'Es decir, 50 g de agua en 10 segundos. Suena fácil hasta que lo intentas.' },
@@ -72,7 +72,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 4, phase: 'Fundamentos', title: 'Lectura del drawdown', type: 'brew',
+    num: 4, phase: 'Fundamentos', title: 'Lectura del drawdown', type: 'brew', baristaId: 'hedrick',
     objective: 'Aprender a medir y leer el drawdown — el tiempo que tarda el agua en pasar por el lecho.',
     carousel: [
       { title: 'El drawdown es tu indicador clave', text: 'Es el tiempo que tarda el agua en pasar por el lecho después del último pour. Es el indicador más fiable de si tu molienda está bien.' },
@@ -94,7 +94,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 5, phase: 'Fundamentos', title: 'Cata progresiva', type: 'taste',
+    num: 5, phase: 'Fundamentos', title: 'Cata progresiva', type: 'taste', baristaId: 'hoffmann',
     objective: 'Probar el mismo café a 4 temperaturas distintas para entender cómo evoluciona.',
     carousel: [
       { title: 'Hoy te centras en probar', text: 'No en preparar. Un buen brew gana sabor al enfriarse. Si pierde, está sobreextraído. Si en frío aparece vacío, está subextraído.' },
@@ -105,7 +105,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 6, phase: 'Fundamentos', title: 'Repetibilidad', type: 'reflect',
+    num: 6, phase: 'Fundamentos', title: 'Repetibilidad', type: 'reflect', baristaId: 'hoffmann',
     objective: 'Preparar dos brews idénticos seguidos. Si no salen parecidos, el problema es tu técnica, no la receta.',
     carousel: [
       { title: 'Sin repetibilidad no hay aprendizaje', text: 'Si no puedes preparar dos cafés iguales seguidos, no estás listo para tocar variables. Hoy la prueba es brutalmente simple.' },
@@ -128,7 +128,7 @@ export const DAYS = [
   // FASE 2 — VARIABLES
   // ====================================================================
   {
-    num: 8, phase: 'Variables', title: 'Molienda más fina', type: 'brew',
+    num: 8, phase: 'Variables', title: 'Molienda más fina', type: 'brew', baristaId: 'hoffmann',
     objective: 'Cambias UNA sola variable: 3 clicks más fina. Todo lo demás idéntico.',
     carousel: [
       { title: 'Una variable, un día', text: 'Hoy cambias UNA sola cosa: la molienda. Bajas 3 clicks respecto a tu base. Todo lo demás idéntico.' },
@@ -169,7 +169,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 10, phase: 'Variables', title: 'Temperatura alta · 96 °C', type: 'brew',
+    num: 10, phase: 'Variables', title: 'Temperatura alta · 96 °C', type: 'brew', baristaId: 'hoffmann',
     objective: 'Vuelves a la molienda base. Subes el agua a 96 °C. Más extracción, más cuerpo, posible amargor.',
     carousel: [
       { title: 'Vuelves a molienda base', text: 'Y ahora subes el agua a 96 °C. Una sola variable distinta de la base original.' },
@@ -248,7 +248,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 14, phase: 'Variables', title: 'Rao spin · agitación final', type: 'brew',
+    num: 14, phase: 'Variables', title: 'Rao spin · agitación final', type: 'brew', baristaId: 'rao',
     objective: 'Receta base + Rao spin tras el último pour. Compara con un brew SIN Rao spin para ver la diferencia.',
     carousel: [
       { title: 'Último día de variables', text: 'Hoy haces dos brews seguidos: uno solo con swirl tras el bloom, y otro añadiendo el Rao spin tras el último pour.' },
@@ -407,7 +407,7 @@ export const DAYS = [
   // FASE 4 — RECETAS DE CAMPEONES
   // ====================================================================
   {
-    num: 22, phase: 'Campeones', title: 'Tetsu Kasuya · 4:6', type: 'brew',
+    num: 22, phase: 'Campeones', title: 'Tetsu Kasuya · 4:6', type: 'brew', baristaId: 'kasuya',
     objective: 'World Brewers Cup 2016. La receta más referenciada de los últimos diez años.',
     carousel: [
       { title: 'World Brewers Cup 2016', text: 'Tetsu Kasuya ganó con este método. Es la receta más referenciada de los últimos diez años en specialty coffee.' },
@@ -428,7 +428,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 23, phase: 'Campeones', title: 'Hoffmann · Ultimate V60', type: 'brew',
+    num: 23, phase: 'Campeones', title: 'Hoffmann · Ultimate V60', type: 'brew', baristaId: 'hoffmann',
     objective: 'La receta más vista de YouTube en pour-over. Decenas de millones de visualizaciones.',
     carousel: [
       { title: 'La receta más vista de YouTube', text: 'James Hoffmann es el barista más visto del mundo y su "Ultimate V60" tiene decenas de millones de visualizaciones. Punto de partida estándar.' },
@@ -448,14 +448,14 @@ export const DAYS = [
     ]
   },
   {
-    num: 24, phase: 'Campeones', title: 'Woelfl · Campeón Mundial 2024', type: 'brew',
+    num: 24, phase: 'Campeones', title: 'Woelfl · Campeón Mundial 2024', type: 'brew', baristaId: 'wolfl',
     objective: 'La ÚNICA receta ganadora del Mundial con OREA V4 + FAST. Tu cafetera.',
     carousel: [
       { title: 'Tu cafetera ganó el mundial', text: 'Martin Woelfl ganó el World Brewers Cup 2024 usando exactamente esta cafetera: OREA V4 + fondo FAST. Es la única receta competitiva ganadora del mundial específicamente con tu cafetera.' },
       { title: 'Por eso es referencia obligatoria', text: 'Receta simple, énfasis en dial-in del molinillo. Calibra con precisión.' },
       { title: 'Molienda específica', text: '490 micras = 21-25 clicks Comandante (o equivalente en tu molinillo).' },
       { title: 'Si tu OREA puede ganar el mundial', text: 'También puede sacar tu mejor taza diaria. Sigue practicando.' },
-      { title: 'Vídeo recomendado', text: 'European Coffee Trip · "Winning Pour Over by Martin Woelfl". Receta completa paso a paso.', video: 'europeancoffeetrip.com' },
+      { title: 'Vídeo recomendado', text: 'European Coffee Trip · "Winning Pour Over Recipe by Martin Wölfl". La receta exacta que ganó el mundial 2024 usando esta misma cafetera, paso a paso en vídeo oficial.', video: 'youtube.com/watch?v=3SIFFaT1MFU', youtubeId: '3SIFFaT1MFU' },
     ],
     coffee: 17, water: 270, ratio: '1:15,9', temp: 93, grind: '490 μm (21-25 clicks Comandante)', bottom: 'FAST',
     targetTime: [170, 200],
@@ -469,7 +469,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 25, phase: 'Campeones', title: 'Lance Hedrick · Ultimate', type: 'brew',
+    num: 25, phase: 'Campeones', title: 'Lance Hedrick · Ultimate', type: 'brew', baristaId: 'hedrick',
     objective: 'Caudal alto (8 g/s), molienda gruesa para compensar, agua casi hirviendo.',
     carousel: [
       { title: 'Runner-up del US Brewers Cup', text: 'Lance Hedrick. Su receta "Ultimate Pourover" tiene millones de visualizaciones y es la referencia para usuarios intermedios-avanzados.' },
@@ -489,7 +489,7 @@ export const DAYS = [
     ]
   },
   {
-    num: 26, phase: 'Campeones', title: "Matteo D'Ottavio · Bypass", type: 'brew',
+    num: 26, phase: 'Campeones', title: "Matteo D'Ottavio · Bypass", type: 'brew', baristaId: 'dottavio',
     objective: 'UK Brewing Champion. Su receta usa BYPASS: agua limpia al café ya hecho.',
     carousel: [
       { title: 'UK Brewing Champion', text: 'Matteo es UK Brewing Champion y embajador OREA. Su receta usa bypass: añadir agua limpia al café ya hecho.' },
