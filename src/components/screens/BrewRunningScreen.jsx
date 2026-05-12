@@ -3,28 +3,14 @@ import { C } from '../../styles/colors';
 import { formatTime } from '../../lib/format';
 import { beep } from '../../lib/audio';
 import { speak } from '../../lib/voice';
+import { CircularTimer } from '../ui/CircularTimer';
+import { WaterFill } from '../ui/WaterFill';
 
-const tonesForAction = (action) => {
-  if (action === 'pour') {
-    return {
-      currentBg: 'rgba(59, 130, 196, 0.18)',
-      currentBorder: 'rgba(59, 130, 196, 0.35)',
-      currentText: '#1E5A8F',
-      ghostBg: 'rgba(59, 130, 196, 0.08)',
-      ghostBorder: 'rgba(59, 130, 196, 0.18)',
-      ghostText: '#5A8AB5',
-      progress: '#3B82C4',
-    };
-  }
-  return {
-    currentBg: 'rgba(60, 36, 21, 0.14)',
-    currentBorder: 'rgba(60, 36, 21, 0.28)',
-    currentText: '#3C2415',
-    ghostBg: 'rgba(60, 36, 21, 0.06)',
-    ghostBorder: 'rgba(60, 36, 21, 0.14)',
-    ghostText: '#6B5544',
-    progress: '#5A3519',
-  };
+const ACTION_LABEL = {
+  pour: 'VIERTE',
+  swirl: 'SWIRL',
+  rao: 'RAO SPIN',
+  drain: 'DRAWDOWN',
 };
 
 export function BrewRunningScreen({ day, onFinish }) {
@@ -80,9 +66,8 @@ export function BrewRunningScreen({ day, onFinish }) {
   const tToNext = nextStep ? nextStep.at - elapsed : null;
   const stepDuration = nextStep ? nextStep.at - currentStep.at : 0;
   const stepProgress = nextStep && stepDuration > 0 ? (elapsed - currentStep.at) / stepDuration : 1;
-
-  const currentTones = currentStep ? tonesForAction(currentStep.action) : tonesForAction('pour');
-  const nextTones = nextStep ? tonesForAction(nextStep.action) : null;
+  const isPour = currentStep?.action === 'pour';
+  const inUrgency = tToNext !== null && tToNext <= 5 && tToNext > 0;
 
   const timeColor = (() => {
     if (elapsed < targetMin) return C.text;
@@ -99,8 +84,9 @@ export function BrewRunningScreen({ day, onFinish }) {
   const togglePause = () => setPhase((p) => (p === 'running' ? 'paused' : 'running'));
 
   return (
-    <div style={{ minHeight: '100vh', background: C.bgGradient, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ padding: '14px 20px 6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', flexDirection: 'column' }}>
+      {/* Header */}
+      <div style={{ padding: '16px 20px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <div style={{ fontSize: 9, color: C.textFaint, letterSpacing: '2px', fontWeight: 700 }}>
             DÍA {day.num}
@@ -114,194 +100,231 @@ export function BrewRunningScreen({ day, onFinish }) {
           style={{
             padding: '8px 14px',
             borderRadius: 14,
-            background: voiceOn ? 'rgba(60,36,21,0.08)' : 'rgba(60,40,25,0.03)',
-            border: `1px solid ${voiceOn ? 'rgba(60,36,21,0.18)' : C.divider}`,
+            background: C.surface,
+            boxShadow: voiceOn ? C.shadowInSoft : C.shadowOutSoft,
+            border: 'none',
             color: voiceOn ? C.text : C.textFaint,
             cursor: 'pointer',
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: '1.5px',
-            backdropFilter: 'blur(20px)',
           }}
         >
           {voiceOn ? 'VOZ' : 'MUDO'}
         </button>
       </div>
 
-      <div style={{ textAlign: 'center', padding: '12px 20px 8px' }}>
+      {/* Tiempo total + estado */}
+      <div style={{ textAlign: 'center', padding: '6px 20px 12px' }}>
         <div style={{ fontSize: 9, color: C.textFaint, letterSpacing: '2.5px', fontWeight: 700, marginBottom: 2 }}>
-          TIEMPO · OBJETIVO {formatTime(targetMin)}–{formatTime(targetMax)}
+          TIEMPO TOTAL · OBJETIVO {formatTime(targetMin)}–{formatTime(targetMax)}
         </div>
         <div
           style={{
-            fontSize: 96,
-            fontWeight: 200,
+            fontSize: 38,
+            fontWeight: 300,
             color: timeColor,
-            letterSpacing: '-4px',
+            letterSpacing: '-1.5px',
             fontVariantNumeric: 'tabular-nums',
-            lineHeight: 0.95,
+            lineHeight: 1,
+            transition: 'color 0.4s ease',
           }}
         >
           {formatTime(elapsed)}
         </div>
         <div
           style={{
-            fontSize: 11,
+            fontSize: 9,
             color: timeColor,
-            marginTop: 2,
+            marginTop: 4,
             fontWeight: 700,
             letterSpacing: '2px',
             textTransform: 'uppercase',
+            transition: 'color 0.4s ease',
           }}
         >
           {timeStatus}
         </div>
       </div>
 
-      {nextStep && tToNext > 0 && (
-        <div style={{ padding: '4px 20px 14px' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              fontSize: 9,
-              color: C.textFaint,
-              letterSpacing: '1.5px',
-              fontWeight: 700,
-              marginBottom: 4,
-            }}
+      {/* Timer circular (foco principal) */}
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 20px 20px' }}>
+        {nextStep ? (
+          <CircularTimer
+            progress={stepProgress}
+            remaining={tToNext}
+            size={260}
+            dangerAt={5}
           >
-            <span>SIGUIENTE EN</span>
-            <span style={{ fontVariantNumeric: 'tabular-nums', fontSize: 11, color: tToNext <= 10 ? C.warn : C.textMute }}>
-              {tToNext}s
-            </span>
-          </div>
-          <div style={{ height: 4, borderRadius: 2, background: 'rgba(60,40,25,0.08)', overflow: 'hidden' }}>
+            {/* Capa de agua para pasos de vertido */}
+            {isPour && <WaterFill progress={stepProgress} size={232} urgency={inUrgency} />}
+
+            {/* Contenido central */}
             <div
               style={{
+                position: 'relative',
+                zIndex: 2,
+                width: '100%',
                 height: '100%',
-                width: `${Math.max(0, Math.min(100, (1 - stepProgress) * 100))}%`,
-                background: tToNext <= 10 ? C.warn : currentTones.progress,
-                borderRadius: 2,
-                transition: 'width 0.9s linear, background 0.3s',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 24px',
+                textAlign: 'center',
               }}
-            />
-          </div>
-        </div>
-      )}
-
-      <div style={{ padding: '0 20px', position: 'relative' }}>
-        {currentStep && (
-          <div
-            key={`current-${currentIdx}`}
-            style={{
-              background: currentTones.currentBg,
-              backdropFilter: 'blur(24px) saturate(140%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(140%)',
-              border: `1px solid ${currentTones.currentBorder}`,
-              borderRadius: 22,
-              padding: '18px 22px',
-              boxShadow: C.shadow,
-              animation: 'slideDownIn 0.55s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          >
-            <div style={{ fontSize: 9, letterSpacing: '3px', color: currentTones.currentText, opacity: 0.7, fontWeight: 700 }}>
-              AHORA · PASO {currentIdx + 1} DE {steps.length}
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 700, lineHeight: 1.2, marginTop: 6, color: currentTones.currentText, letterSpacing: '-0.3px' }}>
-              {currentStep.label}
-            </div>
-            {currentStep.water && (
+            >
               <div
                 style={{
-                  marginTop: 10,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: currentTones.currentText,
-                  opacity: 0.85,
-                  letterSpacing: '0.3px',
+                  fontSize: 9,
+                  letterSpacing: '2.5px',
+                  fontWeight: 700,
+                  color: inUrgency ? '#FFF' : isPour ? '#FFF' : C.textFaint,
+                  textShadow: isPour ? '0 1px 2px rgba(30,90,143,0.4)' : 'none',
+                  marginBottom: 4,
                 }}
               >
-                Báscula · {currentStep.water} g
+                {ACTION_LABEL[currentStep.action] || 'PASO'}
               </div>
-            )}
+              <div
+                style={{
+                  fontSize: 64,
+                  fontWeight: 200,
+                  letterSpacing: '-3px',
+                  fontVariantNumeric: 'tabular-nums',
+                  lineHeight: 1,
+                  color: inUrgency ? '#FFF' : isPour ? '#FFF' : C.text,
+                  textShadow: isPour ? '0 1px 3px rgba(30,90,143,0.5)' : 'none',
+                  transition: 'color 0.35s ease',
+                }}
+              >
+                {tToNext}s
+              </div>
+              {currentStep.water && (
+                <div
+                  style={{
+                    fontSize: 11,
+                    marginTop: 6,
+                    fontWeight: 600,
+                    letterSpacing: '0.5px',
+                    color: isPour ? '#FFF' : C.textMute,
+                    textShadow: isPour ? '0 1px 2px rgba(30,90,143,0.4)' : 'none',
+                  }}
+                >
+                  hasta {currentStep.water} g
+                </div>
+              )}
+            </div>
+          </CircularTimer>
+        ) : (
+          /* Drawdown: sin nextStep, mostramos placa */
+          <div
+            style={{
+              width: 260,
+              height: 260,
+              borderRadius: '50%',
+              background: C.surface,
+              boxShadow: C.shadowOut,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 6,
+            }}
+          >
+            <div style={{ fontSize: 9, letterSpacing: '3px', fontWeight: 700, color: C.accent }}>
+              DRAWDOWN
+            </div>
+            <div style={{ fontSize: 14, color: C.textMute, fontWeight: 600 }}>
+              Espera última gota
+            </div>
           </div>
         )}
       </div>
 
-      <div style={{ padding: '12px 20px 0', flex: 1 }}>
+      {/* Etiqueta completa del paso actual */}
+      {currentStep && (
+        <div style={{ padding: '0 20px 12px' }}>
+          <div
+            style={{
+              background: C.surface,
+              boxShadow: C.shadowOutSoft,
+              borderRadius: 18,
+              padding: '14px 18px',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textFaint, fontWeight: 700, marginBottom: 4 }}>
+              AHORA · PASO {currentIdx + 1} DE {steps.length}
+            </div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: C.text, lineHeight: 1.3, letterSpacing: '-0.2px' }}>
+              {currentStep.label}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Vista previa del siguiente paso */}
+      <div style={{ padding: '0 20px', flex: 1 }}>
         {nextStep && tToNext !== null && tToNext <= 10 && tToNext > 0 && (
           <div
             key={`prep-${currentIdx + 1}`}
             style={{
-              background: 'rgba(201, 168, 92, 0.20)',
-              backdropFilter: 'blur(24px) saturate(140%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(140%)',
-              border: '1px solid rgba(201, 168, 92, 0.40)',
-              borderRadius: 22,
-              padding: '14px 20px',
+              background: C.surface,
+              boxShadow: C.shadowInSoft,
+              borderRadius: 18,
+              padding: '12px 16px',
               animation: 'softPulse 1.2s ease-in-out infinite',
             }}
           >
-            <div style={{ fontSize: 9, letterSpacing: '3px', color: '#8A7333', fontWeight: 700 }}>
+            <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.warn, fontWeight: 700 }}>
               PREPÁRATE EN {tToNext}s
             </div>
-            <div style={{ fontSize: 17, fontWeight: 700, marginTop: 4, lineHeight: 1.25, color: '#7A6428' }}>
+            <div style={{ fontSize: 14, fontWeight: 600, marginTop: 3, lineHeight: 1.3, color: C.text }}>
               {nextStep.label}
             </div>
-            {nextStep.water && (
-              <div style={{ fontSize: 12, color: '#8A7333', marginTop: 4, fontWeight: 600 }}>
-                Báscula · {nextStep.water} g
-              </div>
-            )}
           </div>
         )}
 
-        {nextStep && tToNext > 10 && nextTones && (
+        {nextStep && tToNext > 10 && (
           <div
             key={`ghost-${currentIdx + 1}`}
             style={{
-              background: nextTones.ghostBg,
-              backdropFilter: 'blur(24px) saturate(120%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(120%)',
-              border: `1px solid ${nextTones.ghostBorder}`,
-              borderRadius: 22,
-              padding: '14px 22px',
+              background: C.surface,
+              boxShadow: C.shadowOutSoft,
+              borderRadius: 18,
+              padding: '12px 16px',
               animation: 'fadeInFromBottom 0.5s ease',
-              boxShadow: C.shadow,
+              opacity: 0.75,
             }}
           >
             <div style={{ fontSize: 9, color: C.textFaint, letterSpacing: '2.5px', fontWeight: 700 }}>
               SIGUIENTE
             </div>
-            <div style={{ fontSize: 15, color: nextTones.ghostText, fontWeight: 600, marginTop: 4, lineHeight: 1.3 }}>
+            <div style={{ fontSize: 13, color: C.textMute, fontWeight: 600, marginTop: 3, lineHeight: 1.3 }}>
               {nextStep.label}
             </div>
-            {nextStep.water && (
-              <div style={{ fontSize: 11, color: nextTones.ghostText, opacity: 0.75, marginTop: 2 }}>
-                Báscula · {nextStep.water} g
-              </div>
-            )}
           </div>
         )}
       </div>
 
-      <div style={{ padding: '12px 20px 20px', display: 'flex', gap: 10 }}>
+      {/* Acciones */}
+      <div style={{ padding: '16px 20px 20px', display: 'flex', gap: 10 }}>
         <button
           onClick={togglePause}
           style={{
             flex: 1,
             padding: '16px 0',
             borderRadius: 16,
-            background: C.glassStrong,
-            backdropFilter: 'blur(20px)',
-            border: `1px solid ${C.glassBorder}`,
+            background: C.surface,
+            boxShadow: phase === 'paused' ? C.shadowInSoft : C.shadowOutSoft,
+            border: 'none',
             color: C.text,
             fontSize: 12,
             fontWeight: 700,
             letterSpacing: '2px',
             cursor: 'pointer',
-            boxShadow: C.shadow,
+            transition: 'box-shadow 0.18s',
           }}
         >
           {phase === 'paused' ? 'REANUDAR' : 'PAUSA'}
@@ -312,14 +335,14 @@ export function BrewRunningScreen({ day, onFinish }) {
             flex: 1.5,
             padding: '16px 0',
             borderRadius: 16,
-            background: C.text,
+            background: C.accent,
             border: 'none',
             color: '#FFF',
             fontSize: 12,
             fontWeight: 700,
             letterSpacing: '2px',
             cursor: 'pointer',
-            boxShadow: '0 8px 24px rgba(60,40,25,0.20)',
+            boxShadow: '6px 6px 14px rgba(168,142,113,0.4), -6px -6px 14px rgba(255,255,255,0.9)',
           }}
         >
           TERMINAR
