@@ -1,22 +1,52 @@
+import { useState } from 'react';
+import { BookOpen } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { DAYS } from '../../data/days';
 import { GlassCard } from '../ui/GlassCard';
 import { DayCard } from '../ui/DayCard';
+import { GlossaryScreen } from './GlossaryScreen';
 
 const PHASES = ['Fundamentos', 'Variables', 'Los 4 fondos', 'Campeones', 'Cierre'];
 
 export function HomeScreen({ state, onDayClick }) {
+  const [glossaryOpen, setGlossaryOpen] = useState(false);
   const completedCount = Object.keys(state.completed).length;
   const progress = (completedCount / 30) * 100;
+
+  if (glossaryOpen) {
+    return <GlossaryScreen onBack={() => setGlossaryOpen(false)} />;
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: C.bgGradient, paddingBottom: 32 }}>
       <div style={{ padding: '32px 20px 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-          <img src="/zeris-logo.svg" alt="Zeri's Coffee" width={36} height={36} style={{ display: 'block' }} />
-          <div style={{ fontSize: 10, letterSpacing: '4px', color: C.accent, fontWeight: 700 }}>
-            ZERI'S COFFEE · CÁCERES
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <img src="/zeris-logo.svg" alt="Zeri's Coffee" width={36} height={36} style={{ display: 'block' }} />
+            <div style={{ fontSize: 10, letterSpacing: '4px', color: C.accent, fontWeight: 700 }}>
+              ZERI'S COFFEE · CÁCERES
+            </div>
           </div>
+          <button
+            onClick={() => setGlossaryOpen(true)}
+            aria-label="Abrir glosario"
+            style={{
+              background: C.surface,
+              border: 'none',
+              borderRadius: '50%',
+              width: 38,
+              height: 38,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: C.pour,
+              cursor: 'pointer',
+              boxShadow: C.shadowOutSoft,
+              flexShrink: 0,
+            }}
+          >
+            <BookOpen size={17} strokeWidth={2} />
+          </button>
         </div>
         <h1 style={{ color: C.text, fontSize: 36, fontWeight: 200, lineHeight: 0.95, marginTop: 10, letterSpacing: '-1.5px' }}>
           30 días

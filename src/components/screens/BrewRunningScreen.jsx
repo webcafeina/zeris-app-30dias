@@ -5,6 +5,7 @@ import { beep } from '../../lib/audio';
 import { speak } from '../../lib/voice';
 import { CircularTimer } from '../ui/CircularTimer';
 import { WaterFill } from '../ui/WaterFill';
+import { Hint } from '../ui/Hint';
 
 const ACTION_LABEL = {
   pour: 'VIERTE',
@@ -12,6 +13,17 @@ const ACTION_LABEL = {
   rao: 'RAO SPIN',
   drain: 'DRAWDOWN',
 };
+
+// Mapeo acción → entrada del glosario (cuando aplica).
+// Para `pour` distinguimos bloom (primer vertido) del resto.
+function actionHintTerm(step, idx) {
+  if (!step) return null;
+  if (step.action === 'swirl') return 'swirl';
+  if (step.action === 'rao') return 'rao';
+  if (step.action === 'drain') return 'drawdown';
+  if (step.action === 'pour' && (idx === 0 || /bloom/i.test(step.label || ''))) return 'bloom';
+  return null;
+}
 
 export function BrewRunningScreen({ day, onFinish }) {
   const [elapsed, setElapsed] = useState(0);
@@ -260,6 +272,13 @@ export function BrewRunningScreen({ day, onFinish }) {
             <div style={{ fontSize: 16, fontWeight: 600, color: C.text, lineHeight: 1.3, letterSpacing: '-0.2px' }}>
               {currentStep.label}
             </div>
+            {actionHintTerm(currentStep, currentIdx) && (
+              <div style={{ marginTop: 8, display: 'flex', justifyContent: 'center' }}>
+                <span style={{ fontSize: 11, color: C.pour, fontWeight: 600 }}>
+                  <Hint term={actionHintTerm(currentStep, currentIdx)}>¿Qué es esto?</Hint>
+                </span>
+              </div>
+            )}
           </div>
         </div>
       )}
