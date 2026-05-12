@@ -101,14 +101,16 @@ h1, h2, h3 {
 }
 
 /* Orbes pastel del fondo zen.
-   Muy difuminados (blur grande) y opacidad baja para que sean
-   un susurro de color, no un protagonista. */
+   Blur menor (70px) → orbes más definidos y movimiento más perceptible.
+   Opacidad mantenida en 0.42 (la intensidad ya está bien).
+   NO respetamos prefers-reduced-motion aquí porque el motion es parte
+   nuclear del feature; aceptable en este contexto (mockup móvil casero). */
 .zen-orb {
   position: absolute;
   width: 520px;
   height: 520px;
   border-radius: 50%;
-  filter: blur(90px);
+  filter: blur(70px);
   opacity: 0.42;
   will-change: transform;
 }
@@ -117,14 +119,14 @@ h1, h2, h3 {
   background: #FFE4D2;
   top: -15%;
   left: -15%;
-  animation: orbDriftPeach 26s ease-in-out infinite;
+  animation: orbDriftPeach 22s ease-in-out infinite;
 }
 
 .zen-orb-mint {
   background: #D6EEDF;
   top: 30%;
   right: -18%;
-  animation: orbDriftMint 30s ease-in-out infinite;
+  animation: orbDriftMint 26s ease-in-out infinite;
   animation-delay: -4s;
 }
 
@@ -132,7 +134,7 @@ h1, h2, h3 {
   background: #E4D5F7;
   bottom: -18%;
   left: 15%;
-  animation: orbDriftLavender 34s ease-in-out infinite;
+  animation: orbDriftLavender 28s ease-in-out infinite;
   animation-delay: -10s;
 }
 
@@ -140,10 +142,6 @@ h1, h2, h3 {
   background: #D5E8F4;
   top: 55%;
   left: -10%;
-  animation: orbDriftSky 28s ease-in-out infinite;
+  animation: orbDriftSky 24s ease-in-out infinite;
   animation-delay: -16s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .zen-orb { animation: none; }
 }
