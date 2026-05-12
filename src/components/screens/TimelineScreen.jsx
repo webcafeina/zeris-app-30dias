@@ -3,14 +3,17 @@ import { C } from '../../styles/colors';
 import { formatTime } from '../../lib/format';
 import { warmUpVoice } from '../../lib/voice';
 import { buildBrewPlan } from '../../lib/brewPlan';
+import { getRecommendedCoffeeForDay } from '../../data/coffees';
 import { GlassCard } from '../ui/GlassCard';
 import { ParamChip } from '../ui/ParamChip';
+import { CoffeeRecommendationCard } from '../ui/CoffeeRecommendationCard';
 
 export function TimelineScreen({ day, onBack, onStart }) {
   // Mismo plan que verá el usuario durante el brew (incluye el paso DOSIS
   // sintético a t=0). Así la vista previa cuadra con el cronómetro real.
   const { steps } = buildBrewPlan(day);
   const total = steps[steps.length - 1]?.at || 0;
+  const recommendedCoffee = getRecommendedCoffeeForDay(day);
 
   return (
     <div style={{ minHeight: '100vh', background: C.bgGradient, paddingBottom: 24 }}>
@@ -56,6 +59,16 @@ export function TimelineScreen({ day, onBack, onStart }) {
           <ParamChip label="Fondo" value={day.bottom} fullWidth />
         </div>
       </div>
+
+      {/* Recomendación de café Zeri's para este ejercicio. Si el día no
+          define coffeeId explícito, se infiere por fase. Link directo a la
+          tienda. Cuando tengamos integración real con WooCommerce de
+          zeriscoffee.com, solo cambia el origen de los datos — la UI no. */}
+      {recommendedCoffee && (
+        <div style={{ padding: '0 20px 20px' }}>
+          <CoffeeRecommendationCard coffee={recommendedCoffee} />
+        </div>
+      )}
 
       <div style={{ padding: '0 20px 24px' }}>
         <div style={{ fontSize: 10, letterSpacing: '2px', color: C.textFaint, fontWeight: 700, marginBottom: 10 }}>
