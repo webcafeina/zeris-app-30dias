@@ -4,11 +4,13 @@ import { formatTime } from '../../lib/format';
 import { beep } from '../../lib/audio';
 import { speak, speakTip } from '../../lib/voice';
 import { TIPS } from '../../data/tips';
+import { buildBrewPlan } from '../../lib/brewPlan';
 import { CircularTimer } from '../ui/CircularTimer';
 import { WaterFill } from '../ui/WaterFill';
 import { Hint } from '../ui/Hint';
 
 const ACTION_LABEL = {
+  dose: 'CAFÉ AL FILTRO',
   pour: 'VIERTE',
   swirl: 'SWIRL',
   rao: 'RAO SPIN',
@@ -43,9 +45,10 @@ export function BrewRunningScreen({ day, onFinish }) {
   useEffect(() => { voiceOnRef.current = voiceOn; }, [voiceOn]);
   useEffect(() => { phaseRef.current = phase; }, [phase]);
 
-  const steps = day.steps || [];
-  const targetMin = day.targetTime?.[0] || 150;
-  const targetMax = day.targetTime?.[1] || 200;
+  // El plan real arranca con un paso "DOSIS" sintético de 10s para que el
+  // usuario meta el café molido en el filtro antes del bloom. Sin esto,
+  // quien dispare el cronómetro sin café puesto pierde el momento del bloom.
+  const { steps, targetMin, targetMax } = buildBrewPlan(day);
 
   useEffect(() => {
     if (phase !== 'running') return;

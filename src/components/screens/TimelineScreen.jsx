@@ -2,11 +2,14 @@ import { ChevronLeft, Target, Play } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { formatTime } from '../../lib/format';
 import { warmUpVoice } from '../../lib/voice';
+import { buildBrewPlan } from '../../lib/brewPlan';
 import { GlassCard } from '../ui/GlassCard';
 import { ParamChip } from '../ui/ParamChip';
 
 export function TimelineScreen({ day, onBack, onStart }) {
-  const steps = day.steps || [];
+  // Mismo plan que verá el usuario durante el brew (incluye el paso DOSIS
+  // sintético a t=0). Así la vista previa cuadra con el cronómetro real.
+  const { steps } = buildBrewPlan(day);
   const total = steps[steps.length - 1]?.at || 0;
 
   return (
