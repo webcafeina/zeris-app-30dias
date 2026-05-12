@@ -1,11 +1,28 @@
 import { useState, useRef } from 'react';
-import { Sparkles, AlertTriangle, BookOpen, ChevronLeft, Lightbulb, Mic, MicOff, Check, Repeat } from 'lucide-react';
+import { Sparkles, AlertTriangle, BookOpen, ChevronLeft, Lightbulb, Mic, MicOff, Check, Repeat, Camera, Copy, Instagram } from 'lucide-react';
 import { C } from '../../styles/colors';
 import { formatTime } from '../../lib/format';
 import { diagnose } from '../../lib/diagnose';
 import { TASTE_ATTRS, DEFECTS } from '../../data/taste';
+import { ZERIS } from '../../data/zerisInfo';
 import { GlassCard } from '../ui/GlassCard';
 import { TasteSlider } from '../ui/TasteSlider';
+
+// Caption pre-generado para que la persona pueda copiarlo y pegarlo al subir
+// la foto de su brew a Instagram. Incluye etiquetado del roaster + hashtag
+// del reto + contexto del día.
+function buildShareCaption(day) {
+  const lines = [
+    `Día ${day.num} del reto de 30 días con OREA · ${day.title}`,
+    '',
+    `Ratio ${day.ratio} · ${day.coffee} g · ${day.water} g · ${day.temp} °C`,
+    '',
+    'Aprendiendo café de especialidad con el método paso a paso de @zeriscoffeeroaster.',
+    '',
+    '#RetoZerisCoffee #ZerisCoffee #cafedeespecialidad',
+  ];
+  return lines.join('\n');
+}
 
 export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepeatNow }) {
   const [phase, setPhase] = useState('summary');
@@ -14,7 +31,20 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
   const [rating, setRating] = useState(0);
   const [notes, setNotes] = useState('');
   const [isDictating, setIsDictating] = useState(false);
+  const [captionCopied, setCaptionCopied] = useState(false);
   const recognitionRef = useRef(null);
+
+  const shareCaption = buildShareCaption(day);
+
+  const copyCaption = async () => {
+    try {
+      await navigator.clipboard.writeText(shareCaption);
+      setCaptionCopied(true);
+      setTimeout(() => setCaptionCopied(false), 2500);
+    } catch (e) {
+      console.warn('Clipboard no disponible:', e);
+    }
+  };
 
   const targetMin = day.targetTime?.[0] || 150;
   const targetMax = day.targetTime?.[1] || 200;
@@ -455,12 +485,108 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
         {isDictating ? '● Escuchando... toca para parar' : 'Toca el micro para dictar por voz'}
       </div>
 
+      {/* Comparte tu cafetazo: pre-rellena el caption para Instagram con el
+          handle de Zeri's + hashtag del reto. Un toque copia el texto al
+          portapapeles; otro abre Instagram para pegarlo al subir la foto. */}
+      <div
+        style={{
+          marginTop: 24,
+          background: C.surface,
+          borderRadius: 18,
+          padding: 18,
+          boxShadow: C.shadowOutSoft,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <Camera size={16} style={{ color: C.text }} />
+          <span style={{ fontSize: 10, letterSpacing: '2.5px', color: C.text, fontWeight: 700, textTransform: 'uppercase' }}>
+            Comparte tu cafetazo
+          </span>
+        </div>
+
+        <p style={{ fontSize: 13, color: C.textMute, lineHeight: 1.55, margin: 0, marginBottom: 12 }}>
+          Haz una foto a tu taza, al bloom, a la cafetera o al café que has usado. Etiqueta a Zeri's y suma para tu descuento del reto.
+        </p>
+
+        <pre
+          style={{
+            fontSize: 12,
+            lineHeight: 1.5,
+            color: C.text,
+            background: C.surfaceMute,
+            borderRadius: 12,
+            padding: '12px 14px',
+            margin: 0,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            fontFamily: 'inherit',
+            border: `1px solid ${C.border}`,
+          }}
+        >
+          {shareCaption}
+        </pre>
+
+        <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+          <button
+            onClick={copyCaption}
+            style={{
+              flex: 1,
+              background: C.surface,
+              border: `1px solid ${C.border}`,
+              borderRadius: 14,
+              padding: '12px 14px',
+              color: C.text,
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              cursor: 'pointer',
+              transition: 'background 0.12s',
+            }}
+          >
+            {captionCopied ? <Check size={14} /> : <Copy size={14} />}
+            {captionCopied ? 'Copiado' : 'Copiar texto'}
+          </button>
+          <a
+            href={ZERIS.social.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              flex: 1,
+              background: C.text,
+              color: '#FFF',
+              border: 'none',
+              borderRadius: 14,
+              padding: '12px 14px',
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              cursor: 'pointer',
+              textDecoration: 'none',
+              boxShadow: C.shadowOutSoft,
+            }}
+          >
+            <Instagram size={14} />
+            Instagram
+          </a>
+        </div>
+      </div>
+
       <button
         onClick={finish}
         style={{
           width: '100%',
-          marginTop: 24,
-          background: `linear-gradient(135deg, ${C.success}, #10B981)`,
+          marginTop: 16,
+          background: C.text,
           border: 'none',
           borderRadius: 20,
           padding: 18,

@@ -7,6 +7,44 @@
 
 export const DOSE_WINDOW = 10; // segundos de margen antes del bloom
 
+// Caudal de vertido OREA: 5 g de agua por segundo. Sobre esta tasa calculamos
+// cuántos segundos debería durar el ACTO de verter (≠ el hueco hasta el
+// siguiente paso, que incluye la espera mientras filtra).
+const POUR_RATE_GPS = 5;
+
+// Duración estimada del vertido del paso `idx` en segundos.
+// 0 si el paso no es un pour. Mínimo 1s para que el ring se aprecie.
+export function pourDurationForStep(steps, idx) {
+  const step = steps?.[idx];
+  if (!step || step.action !== 'pour' || typeof step.water !== 'number') return 0;
+  let prevWater = 0;
+  for (let i = idx - 1; i >= 0; i--) {
+    const s = steps[i];
+    if (s.action === 'pour' && typeof s.water === 'number') {
+      prevWater = s.water;
+      break;
+    }
+  }
+  const added = Math.max(0, step.water - prevWater);
+  if (added <= 0) return 0;
+  return Math.max(1, Math.ceil(added / POUR_RATE_GPS));
+}
+
+// Gramos que se vierten en este paso (diff respecto al pour anterior).
+export function pourAmountForStep(steps, idx) {
+  const step = steps?.[idx];
+  if (!step || step.action !== 'pour' || typeof step.water !== 'number') return 0;
+  let prevWater = 0;
+  for (let i = idx - 1; i >= 0; i--) {
+    const s = steps[i];
+    if (s.action === 'pour' && typeof s.water === 'number') {
+      prevWater = s.water;
+      break;
+    }
+  }
+  return Math.max(0, step.water - prevWater);
+}
+
 export function buildBrewPlan(day) {
   const rawSteps = day?.steps || [];
   const dosePrep = {
