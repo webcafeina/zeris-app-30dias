@@ -30,6 +30,40 @@ export function pourDurationForStep(steps, idx) {
   return Math.max(1, Math.ceil(added / POUR_RATE_GPS));
 }
 
+// Duración por defecto (s) de las acciones manuales. Si una receta especifica
+// `step.duration`, ese valor prevalece.
+const DEFAULT_ACTION_DURATIONS = {
+  dose: 10,    // ventana para echar el café al filtro
+  swirl: 5,    // un par de giros suaves
+  rao: 10,     // Rao spin clásico
+  drain: 0,    // drawdown = todo el resto del paso, no tiene duración propia
+};
+
+// Duración de la ACCIÓN del paso (≠ del hueco hasta el siguiente).
+// - pour: derivada del caudal (gramos / 5g/s)
+// - swirl/rao/dose: step.duration o el default
+// - drain: 0 (no hay "acción", solo espera)
+// El consumidor usa esto para alternar entre la etiqueta de la acción
+// y la etiqueta "ESPERA" dentro del mismo paso.
+export function actionDurationForStep(steps, idx) {
+  const step = steps?.[idx];
+  if (!step) return 0;
+  if (step.action === 'pour') return pourDurationForStep(steps, idx);
+  if (typeof step.duration === 'number') return Math.max(0, step.duration);
+  return DEFAULT_ACTION_DURATIONS[step.action] || 0;
+}
+
+// Verbo corto en gerundio para la subetiqueta del timer ("vertiendo · 4s").
+export function actionVerb(action) {
+  switch (action) {
+    case 'pour': return 'vertiendo';
+    case 'swirl': return 'girando';
+    case 'rao': return 'rao spin';
+    case 'dose': return 'echando café';
+    default: return action;
+  }
+}
+
 // Gramos que se vierten en este paso (diff respecto al pour anterior).
 export function pourAmountForStep(steps, idx) {
   const step = steps?.[idx];

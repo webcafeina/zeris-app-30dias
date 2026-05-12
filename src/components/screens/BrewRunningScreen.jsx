@@ -4,7 +4,13 @@ import { formatTime } from '../../lib/format';
 import { beep } from '../../lib/audio';
 import { speak, speakTip } from '../../lib/voice';
 import { TIPS } from '../../data/tips';
-import { buildBrewPlan, pourDurationForStep, pourAmountForStep } from '../../lib/brewPlan';
+import {
+  buildBrewPlan,
+  pourDurationForStep,
+  pourAmountForStep,
+  actionDurationForStep,
+  actionVerb,
+} from '../../lib/brewPlan';
 import { CircularTimer } from '../ui/CircularTimer';
 import { WaterFill } from '../ui/WaterFill';
 import { WaterStream } from '../ui/WaterStream';
@@ -128,14 +134,22 @@ export function BrewRunningScreen({ day, onFinish }) {
       : 1;
   const cardTintBg = `rgba(91, 160, 217, ${0.18 * fadeFactor})`; // C.pour con alpha que también se desvanece
 
-  // Sub-timer del vertido: cuántos segundos debe durar el ACTO de verter
-  // (≠ del hueco hasta el siguiente paso). Solo aplica a pasos pour.
-  const pourDuration = pourDurationForStep(steps, currentIdx);
+  // Sub-timer de la acción del paso: cuántos segundos debe durar el ACTO
+  // (verter, swirl, rao spin, echar café al filtro). Distinto del hueco
+  // hasta el siguiente paso. Una vez agotado, la etiqueta del timer pasa
+  // a "ESPERA" y, en el caso del pour, el agua se queda estática.
+  const actionDuration = actionDurationForStep(steps, currentIdx);
+  const pourDuration = isPour ? actionDuration : 0;
   const pourAmount = pourAmountForStep(steps, currentIdx);
   const elapsedInStep = currentStep ? Math.max(0, elapsed - currentStep.at) : 0;
-  const pourLeft = Math.max(0, pourDuration - elapsedInStep);
-  const pourProgress = pourDuration > 0 ? Math.min(1, elapsedInStep / pourDuration) : 1;
-  const stillPouring = isPour && pourLeft > 0;
+  const actionLeft = Math.max(0, actionDuration - elapsedInStep);
+  const actionProgress = actionDuration > 0 ? Math.min(1, elapsedInStep / actionDuration) : 1;
+  const stillActing = actionDuration > 0 && actionLeft > 0;
+  // Aliases por compatibilidad con la UI del WaterFill y el chorrito
+  // (que solo deben renderizarse durante el acto de verter).
+  const pourLeft = isPour ? actionLeft : 0;
+  const pourProgress = isPour ? actionProgress : 1;
+  const stillPouring = isPour && stillActing;
   // inUrgency conservada por compat con plantillas pre-existentes; toda
   // la lógica de color rojo se ha retirado.
   const inUrgency = false;
@@ -326,8 +340,10 @@ export function BrewRunningScreen({ day, onFinish }) {
                       textTransform: 'uppercase',
                     }}
                   >
-                    {isPour && pourDuration > 0
-                      ? (stillPouring ? 'VIERTE' : 'ESPERA')
+                    {actionDuration > 0
+                      ? (stillActing
+                          ? (ACTION_LABEL[currentStep?.action] || 'Paso')
+                          : 'ESPERA')
                       : (ACTION_LABEL[currentStep?.action] || 'Paso')}
                   </div>
                   <div
@@ -344,18 +360,19 @@ export function BrewRunningScreen({ day, onFinish }) {
                   >
                     {tToNext}s
                   </div>
-                  {stillPouring && pourLeft > 0 && (
+                  {stillActing && actionLeft > 0 && (
                     <div
                       style={{
                         fontSize: 11,
                         marginTop: 5,
                         fontWeight: 700,
                         letterSpacing: '0.5px',
-                        color: '#FFF',
-                        textShadow: '0 1px 2px rgba(30,90,143,0.4)',
+                        color: stillPouring ? '#FFF' : C.text,
+                        textShadow: stillPouring ? '0 1px 2px rgba(30,90,143,0.4)' : 'none',
                       }}
                     >
-                      vertiendo · {pourLeft}s · {pourAmount} g
+                      {actionVerb(currentStep?.action)} · {actionLeft}s
+                      {isPour && pourAmount > 0 ? ` · ${pourAmount} g` : ''}
                     </div>
                   )}
                   {!stillPouring && currentStep?.water && isPour && (
