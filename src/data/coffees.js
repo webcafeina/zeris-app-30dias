@@ -6,6 +6,15 @@
 // nombres / orígenes / precios / URLs verdaderos. La estructura del
 // objeto y los baristaIds quedarán intactos.
 
+// Descuento "ahora" universal: 3% extra al comprar el café recomendado
+// del ejercicio en el momento. Margen pequeño a propósito (no es la
+// promo principal — solo un nudge para empujar la compra).
+export const FLASH_DISCOUNT = {
+  code: 'RECETA3',
+  percent: 3,
+  copy: '3% extra si lo compras ahora desde aquí',
+};
+
 export const COFFEES = {
   // Café claro, perfilado y limpio — ideal para ejercicios de cata y
   // recetas que buscan claridad/acidez (Fundamentos, Variables).
@@ -13,6 +22,7 @@ export const COFFEES = {
     id: 'ethiopiaWashed',
     name: 'Etiopía Yirgacheffe',
     region: 'Yirgacheffe · Etiopía',
+    code: 'ETH',
     process: 'Lavado',
     roast: 'Tueste claro',
     notes: 'Bergamota · jazmín · cítrico · té negro',
@@ -20,6 +30,8 @@ export const COFFEES = {
     price: '14,90 €',
     weight: '250 g',
     photo: null, // pendiente de asignar imagen real
+    bagColor: '#C44D2E',
+    bagAccent: '#F5C56B',
     shopUrl: 'https://zeriscoffee.com/tienda/',
   },
 
@@ -28,6 +40,7 @@ export const COFFEES = {
     id: 'colombiaCaturra',
     name: 'Colombia Huila Caturra',
     region: 'Huila · Colombia',
+    code: 'COL',
     process: 'Lavado',
     roast: 'Tueste claro-medio',
     notes: 'Caramelo · pera · cacao · panela',
@@ -35,6 +48,8 @@ export const COFFEES = {
     price: '13,90 €',
     weight: '250 g',
     photo: null,
+    bagColor: '#8B5A2B',
+    bagAccent: '#D8B27E',
     shopUrl: 'https://zeriscoffee.com/tienda/',
   },
 
@@ -44,6 +59,7 @@ export const COFFEES = {
     id: 'brasilNatural',
     name: 'Brasil Cerrado Natural',
     region: 'Cerrado · Brasil',
+    code: 'BRA',
     process: 'Natural',
     roast: 'Tueste medio',
     notes: 'Chocolate con leche · avellana · fruta roja madura',
@@ -51,6 +67,8 @@ export const COFFEES = {
     price: '12,50 €',
     weight: '250 g',
     photo: null,
+    bagColor: '#4A2E1A',
+    bagAccent: '#C29768',
     shopUrl: 'https://zeriscoffee.com/tienda/',
   },
 
@@ -60,6 +78,7 @@ export const COFFEES = {
     id: 'costaRicaAnaerobic',
     name: 'Costa Rica Naranjo Anaeróbico',
     region: 'Naranjo · Costa Rica',
+    code: 'CRC',
     process: 'Anaeróbico honey',
     roast: 'Tueste claro',
     notes: 'Frutos rojos fermentados · ron · cacao puro',
@@ -67,6 +86,8 @@ export const COFFEES = {
     price: '17,90 €',
     weight: '250 g',
     photo: null,
+    bagColor: '#7A2E2E',
+    bagAccent: '#E3B16F',
     shopUrl: 'https://zeriscoffee.com/tienda/',
   },
 };
