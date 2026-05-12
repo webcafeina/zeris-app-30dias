@@ -115,7 +115,7 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
             </div>
           )}
           {elapsed < targetMin && (
-            <div style={{ marginTop: 18, padding: 14, borderRadius: 14, background: 'rgba(217,119,6,0.08)', border: '1px solid rgba(217,119,6,0.2)' }}>
+            <div style={{ marginTop: 18, padding: 14, borderRadius: 14, background: C.surfaceMute, border: `1px solid ${C.border}` }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                 <AlertTriangle size={16} style={{ color: C.warn, marginTop: 2, flexShrink: 0 }} />
                 <div style={{ textAlign: 'left' }}>
@@ -130,7 +130,7 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
             </div>
           )}
           {elapsed >= targetMin && elapsed <= targetMax && (
-            <div style={{ marginTop: 18, padding: 14, borderRadius: 14, background: 'rgba(5,150,105,0.08)', border: '1px solid rgba(5,150,105,0.2)', textAlign: 'left' }}>
+            <div style={{ marginTop: 18, padding: 14, borderRadius: 14, background: C.surfaceMute, border: `1px solid ${C.border}`, textAlign: 'left' }}>
               <div style={{ color: C.success, fontSize: 13, fontWeight: 600 }}>
                 ✓ Tiempo en rango óptimo. Ahora la cata confirmará si molienda y temperatura son correctas.
               </div>
@@ -473,7 +473,7 @@ export function PostBrewScreen({ day, elapsed, onComplete, onRepeatLater, onRepe
           justifyContent: 'center',
           gap: 10,
           cursor: 'pointer',
-          boxShadow: '0 8px 24px rgba(5,150,105,0.3)',
+          boxShadow: C.shadowStrong,
         }}
       >
         <Check size={20} strokeWidth={3} />

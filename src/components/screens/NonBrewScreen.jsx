@@ -153,7 +153,7 @@ export function NonBrewScreen({ day, onBack, onComplete }) {
           justifyContent: 'center',
           gap: 10,
           cursor: 'pointer',
-          boxShadow: '0 8px 24px rgba(5,150,105,0.3)',
+          boxShadow: C.shadowStrong,
         }}
       >
         <Check size={20} strokeWidth={3} />

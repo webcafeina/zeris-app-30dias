@@ -50,7 +50,7 @@ export function CarouselScreen({ day, onBack, onContinue }) {
               flex: 1,
               height: 3,
               borderRadius: 2,
-              background: i === idx ? C.accent : 'rgba(90,53,25,0.15)',
+              background: i === idx ? C.accent : 'rgba(10,10,10,0.12)',
               transition: 'background 0.3s',
             }}
           />

@@ -69,7 +69,7 @@ export function TimelineScreen({ day, onBack, onStart }) {
               top: 8,
               bottom: 8,
               width: 2,
-              background: `linear-gradient(to bottom, ${C.accent} 0%, ${C.accentBright} 50%, rgba(90,53,25,0.2) 100%)`,
+              background: `linear-gradient(to bottom, ${C.accent} 0%, ${C.accentBright} 50%, rgba(10,10,10,0.15) 100%)`,
               borderRadius: 1,
             }}
           />

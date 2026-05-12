@@ -58,10 +58,13 @@ export const C = {
   brewBright: '#2A2A2A',
   brewLight: 'rgba(10, 10, 10, 0.04)',
 
-  // Estados
-  success: '#5A7D5A',
-  warn: '#A88440',
-  danger: '#C95252',
+  // Estados en B&W (la app es monocroma; los acentos cromáticos
+  // los aporta solo el fondo de orbes pastel). Si en algún momento
+  // hay que diferenciar severities funcionales, hacerlo con peso/tamaño
+  // tipográfico o con un icono — no con color.
+  success: BLACK,
+  warn: BLACK,
+  danger: BLACK,
 
   // Compat
   glass: WHITE,

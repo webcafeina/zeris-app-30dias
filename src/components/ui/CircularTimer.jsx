@@ -69,7 +69,7 @@ export function CircularTimer({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="rgba(60,40,25,0.06)"
+          stroke="rgba(10,10,10,0.07)"
           strokeWidth={stroke}
         />
         <circle

@@ -32,7 +32,7 @@ export function TasteSlider({ attr, value, onChange }) {
           width: '100%',
           height: 36,
           appearance: 'none',
-          background: `linear-gradient(to right, ${C.accent} 0%, ${C.accentBright} ${pct}%, rgba(90,53,25,0.1) ${pct}%, rgba(90,53,25,0.1) 100%)`,
+          background: `linear-gradient(to right, ${C.accent} 0%, ${C.accentBright} ${pct}%, rgba(10,10,10,0.10) ${pct}%, rgba(10,10,10,0.10) 100%)`,
           borderRadius: 18,
           outline: 'none',
           border: `1px solid ${C.glassBorder}`,

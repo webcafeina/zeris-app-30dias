@@ -12,8 +12,8 @@ export function CountdownScreen({ onDone, voiceOn = true }) {
   useEffect(() => {
     if (count === 0) {
       beep(880, 0.3, 0.5);
-      speak('Empezamos', voiceOn);
-      const t = setTimeout(onDone, 800);
+      speak('Empecemos a hacer café', voiceOn);
+      const t = setTimeout(onDone, 1400);
       return () => clearTimeout(t);
     }
     beep(660, 0.15, 0.3);
@@ -58,16 +58,50 @@ export function CountdownScreen({ onDone, voiceOn = true }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: isGo ? 56 : 140,
-            fontWeight: 200,
-            color: isGo ? C.accent : count <= 1 ? C.danger : C.text,
-            letterSpacing: isGo ? '4px' : '-8px',
-            lineHeight: 1,
-            transition: 'color 0.35s ease, font-size 0.3s ease',
-            fontVariantNumeric: 'tabular-nums',
+            flexDirection: 'column',
+            color: C.text,
+            transition: 'color 0.35s ease',
+            padding: '0 24px',
+            textAlign: 'center',
           }}
         >
-          {isGo ? '¡YA!' : count}
+          {isGo ? (
+            <>
+              <div
+                style={{
+                  fontSize: 22,
+                  fontWeight: 200,
+                  letterSpacing: '-0.5px',
+                  lineHeight: 1.05,
+                  marginBottom: 4,
+                }}
+              >
+                Empecemos
+              </div>
+              <div
+                style={{
+                  fontSize: 22,
+                  fontWeight: 700,
+                  letterSpacing: '-0.5px',
+                  lineHeight: 1.05,
+                }}
+              >
+                a hacer café
+              </div>
+            </>
+          ) : (
+            <div
+              style={{
+                fontSize: 140,
+                fontWeight: 200,
+                letterSpacing: '-8px',
+                lineHeight: 1,
+                fontVariantNumeric: 'tabular-nums',
+              }}
+            >
+              {count}
+            </div>
+          )}
         </div>
       </CircularTimer>
     </div>
