@@ -117,12 +117,16 @@ export function BrewRunningScreen({ day, onFinish }) {
   const stepDuration = nextStep ? nextStep.at - currentStep.at : 0;
   const stepProgress = nextStep && stepDuration > 0 ? (elapsed - currentStep.at) / stepDuration : 1;
   const isPour = currentStep?.action === 'pour';
-  const inUrgency = tToNext !== null && tToNext <= 5 && tToNext > 0;
-  // Color del anillo + tinte de la card AHORA. Va de azul intenso (0%
-  // del paso) a azul muy claro (100% del paso). En urgencia el componente
-  // CircularTimer se encarga de pasar a rojo.
-  const ringTint = blueShade(stepProgress);
-  const cardTintBg = blueTintBg(stepProgress, 0.16);
+  // Toda la cromática del brew gira en torno al azul agua, sin rojo.
+  // Card y anillo comparten el mismo azul; lo que cambia con el tiempo
+  // es la OPACIDAD: en los últimos 5s, ambos se desvanecen hasta confundirse
+  // con el fondo, justo antes de que la siguiente card aparezca con un rebote.
+  const FADE_AT = 5;
+  const fadeFactor =
+    tToNext !== null && tToNext !== undefined && tToNext <= FADE_AT && tToNext >= 0
+      ? Math.max(0, tToNext / FADE_AT)
+      : 1;
+  const cardTintBg = `rgba(91, 160, 217, ${0.18 * fadeFactor})`; // C.pour con alpha que también se desvanece
 
   // Sub-timer del vertido: cuántos segundos debe durar el ACTO de verter
   // (≠ del hueco hasta el siguiente paso). Solo aplica a pasos pour.
@@ -132,6 +136,9 @@ export function BrewRunningScreen({ day, onFinish }) {
   const pourLeft = Math.max(0, pourDuration - elapsedInStep);
   const pourProgress = pourDuration > 0 ? Math.min(1, elapsedInStep / pourDuration) : 1;
   const stillPouring = isPour && pourLeft > 0;
+  // inUrgency conservada por compat con plantillas pre-existentes; toda
+  // la lógica de color rojo se ha retirado.
+  const inUrgency = false;
 
   const timeColor = (() => {
     if (elapsed < targetMin) return C.text;
@@ -261,7 +268,7 @@ export function BrewRunningScreen({ day, onFinish }) {
         {nextStep ? (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{ position: 'relative' }}>
-              <WaterStream active={stillPouring} urgency={stillPouring && pourLeft <= 2} />
+              <WaterStream active={stillPouring} />
               <CircularTimer
                 progress={stepProgress}
                 remaining={tToNext}
@@ -269,13 +276,11 @@ export function BrewRunningScreen({ day, onFinish }) {
                 stroke={13}
                 dangerAt={5}
                 noDrain
-                strokeColorOverride={ringTint}
               >
                 {isPour && pourDuration > 0 && (
                   <WaterFill
                     progress={pourProgress}
                     size={212}
-                    urgency={stillPouring && pourLeft <= 2}
                     active={stillPouring}
                   />
                 )}
@@ -393,11 +398,12 @@ export function BrewRunningScreen({ day, onFinish }) {
               padding: '14px 18px',
               textAlign: 'center',
               animation: 'cardPum 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
-              transition: 'background 0.9s ease, opacity 0.9s ease',
-              // La card se va desvaneciendo según pasa el tiempo: empieza
-              // 100% y termina ~55%. No la dejamos invisible para que
-              // siempre se pueda leer la instrucción.
-              opacity: 1 - stepProgress * 0.45,
+              transition: 'background 0.9s linear, opacity 0.9s linear',
+              // La card se mantiene visible al 100% hasta los últimos 5s
+              // del paso; en esos 5s su opacidad cae linealmente a 0 (se
+              // confunde con el fondo), justo antes de que la siguiente
+              // card aparezca con un rebote.
+              opacity: fadeFactor,
             }}
           >
             <div style={{ fontSize: 9, letterSpacing: '2.5px', color: C.textMute, fontWeight: 700, marginBottom: 4 }}>

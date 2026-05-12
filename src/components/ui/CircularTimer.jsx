@@ -26,10 +26,14 @@ export function CircularTimer({
   const circumference = 2 * Math.PI * r;
   const dashoffset = noDrain ? 0 : circumference * p;
 
-  const inUrgency = remaining !== null && remaining !== undefined && remaining <= dangerAt && remaining > 0;
-  const strokeColor = strokeColorOverride
-    ? (inUrgency ? C.danger : strokeColorOverride)
-    : (inUrgency ? C.danger : C.pour);
+  // El anillo del cronómetro siempre es azul (mismo palette que el agua,
+  // sin rojo de urgencia). En los últimos `dangerAt` segundos pierde
+  // opacidad gradualmente hasta confundirse con el fondo.
+  const strokeColor = strokeColorOverride || C.pour;
+  const strokeOpacity =
+    remaining !== null && remaining !== undefined && remaining <= dangerAt && remaining >= 0
+      ? Math.max(0, remaining / dangerAt)
+      : 1;
 
   return (
     <div
@@ -40,7 +44,6 @@ export function CircularTimer({
         borderRadius: '50%',
         background: C.surface,
         boxShadow: C.shadowOut,
-        animation: inUrgency ? 'urgencyPulse 0.7s ease-in-out infinite' : 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -60,7 +63,9 @@ export function CircularTimer({
         {children}
       </div>
 
-      {/* Anillo SVG — va por encima del pozo */}
+      {/* Anillo SVG — va por encima del pozo. Usa un gradiente vertical
+          azul (mismo palette que el agua del WaterFill) y la stroke-opacity
+          se reduce gradualmente cuando faltan pocos segundos. */}
       <svg
         width={size}
         height={size}
@@ -73,6 +78,20 @@ export function CircularTimer({
         }}
         aria-hidden="true"
       >
+        <defs>
+          <linearGradient
+            id={`ring-grad-${size}`}
+            x1={size}
+            y1={0}
+            x2={0}
+            y2={0}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor={C.pourBright} />
+            <stop offset="100%" stopColor={C.pour} />
+          </linearGradient>
+        </defs>
+        {/* Track hairline siempre visible */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -81,19 +100,21 @@ export function CircularTimer({
           stroke="rgba(10,10,10,0.07)"
           strokeWidth={stroke}
         />
+        {/* Anillo activo: usa el gradiente (o override). stroke-opacity
+            cae a 0 en los últimos dangerAt segundos. */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
-          stroke={strokeColor}
+          stroke={strokeColorOverride || `url(#ring-grad-${size})`}
+          strokeOpacity={strokeOpacity}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={dashoffset}
           style={{
-            transition: 'stroke-dashoffset 0.9s linear, stroke 0.35s ease',
-            filter: inUrgency ? `drop-shadow(0 0 6px ${C.danger})` : 'none',
+            transition: 'stroke-dashoffset 0.9s linear, stroke-opacity 0.9s linear, stroke 0.35s ease',
           }}
         />
       </svg>
