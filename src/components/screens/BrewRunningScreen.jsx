@@ -225,8 +225,10 @@ export function BrewRunningScreen({ day, onFinish }) {
           - Anillo: cuenta atrás hasta el siguiente paso (tToNext).
           - WaterFill: sube de 0 a 100% durante pourDuration y se queda
             quieto al terminar el vertido (active=false freezing).
-          - WaterStream: gotas cayendo, solo mientras stillPouring. */}
-      <div style={{ padding: '8px 20px 24px' }}>
+          - WaterStream: gotas cayendo, solo mientras stillPouring.
+          Padding-top generoso para que el chorrito tenga aire sobre el
+          ring y no clipe contra el tiempo total. */}
+      <div style={{ padding: '60px 20px 30px' }}>
         {nextStep ? (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{ position: 'relative' }}>

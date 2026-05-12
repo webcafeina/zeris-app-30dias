@@ -54,7 +54,14 @@ export function MethodSwitcher({
           padding: '14px 20px 26px',
           animation: 'slideUpIn 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
           maxHeight: '88vh',
-          overflowY: 'auto',
+          // overflow-y:auto antes; los navegadores móviles a veces clipan también
+          // overflow-x con el scroll vertical, recortando sombras laterales.
+          // Mejor scroll explícito + x visible.
+          overflowY: 'scroll',
+          overflowX: 'visible',
+          // padding interno extra para que las sombras de las cards quepan.
+          paddingLeft: 24,
+          paddingRight: 24,
         }}
       >
         {/* Handle */}

@@ -79,10 +79,11 @@ export function Hint({ term, children, inline = true }) {
               background: C.surface,
               borderRadius: '24px 24px 0 0',
               boxShadow: '0 -8px 40px rgba(58,65,81,0.18)',
-              padding: '20px 22px 28px',
+              padding: '20px 26px 28px',
               animation: 'slideUpIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
               maxHeight: '85vh',
-              overflowY: 'auto',
+              overflowY: 'scroll',
+              overflowX: 'visible',
             }}
           >
             {/* Handle */}
