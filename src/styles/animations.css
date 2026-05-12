@@ -36,31 +36,31 @@
 }
 
 /* Movimientos para los orbes del fondo zen.
-   Cada orbe usa su propio keyframe con un trayecto distinto.
-   Trayectos más amplios y duración menor → movimiento más perceptible
-   pero todavía calmo (zen, no inquieto). */
+   Uso translate3d (no translate) para forzar capa GPU y evitar que
+   Safari/Chrome móvil throttleen la animación cuando la página
+   parece idle. */
 @keyframes orbDriftPeach {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(38vw, 30vh) scale(1.2); }
-  100% { transform: translate(0, 0) scale(1); }
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(38vw, 30vh, 0) scale(1.2); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
 }
 
 @keyframes orbDriftMint {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(-34vw, 26vh) scale(1.15); }
-  100% { transform: translate(0, 0) scale(1); }
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(-34vw, 26vh, 0) scale(1.15); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
 }
 
 @keyframes orbDriftLavender {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(32vw, -28vh) scale(1.25); }
-  100% { transform: translate(0, 0) scale(1); }
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(32vw, -28vh, 0) scale(1.25); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
 }
 
 @keyframes orbDriftSky {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(-28vw, -32vh) scale(1.15); }
-  100% { transform: translate(0, 0) scale(1); }
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(-28vw, -32vh, 0) scale(1.15); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
 }
 
 html, body, #root {
@@ -101,47 +101,50 @@ h1, h2, h3 {
 }
 
 /* Orbes pastel del fondo zen.
-   Blur menor (70px) → orbes más definidos y movimiento más perceptible.
-   Opacidad mantenida en 0.42 (la intensidad ya está bien).
-   NO respetamos prefers-reduced-motion aquí porque el motion es parte
-   nuclear del feature; aceptable en este contexto (mockup móvil casero). */
+   - radial-gradient en lugar de filter:blur → bordes suaves "gratis"
+     y SIN el throttling de Safari mobile a las animaciones blurred.
+   - translate3d + backface-visibility:hidden → fuerza capa GPU,
+     asegura repintado continuo sin esperar interacción del usuario.
+   - opacidad 0.7 base; el gradiente difumina hasta transparente
+     en su propio borde, así que se ve más suave que un sólido. */
 .zen-orb {
   position: absolute;
-  width: 520px;
-  height: 520px;
+  width: 620px;
+  height: 620px;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.42;
+  opacity: 0.7;
   will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .zen-orb-peach {
-  background: #FFE4D2;
-  top: -15%;
-  left: -15%;
+  background: radial-gradient(closest-side, #FFE4D2 0%, rgba(255, 228, 210, 0.4) 50%, transparent 80%);
+  top: -18%;
+  left: -18%;
   animation: orbDriftPeach 22s ease-in-out infinite;
 }
 
 .zen-orb-mint {
-  background: #D6EEDF;
-  top: 30%;
-  right: -18%;
+  background: radial-gradient(closest-side, #D6EEDF 0%, rgba(214, 238, 223, 0.4) 50%, transparent 80%);
+  top: 28%;
+  right: -20%;
   animation: orbDriftMint 26s ease-in-out infinite;
   animation-delay: -4s;
 }
 
 .zen-orb-lavender {
-  background: #E4D5F7;
-  bottom: -18%;
-  left: 15%;
+  background: radial-gradient(closest-side, #E4D5F7 0%, rgba(228, 213, 247, 0.4) 50%, transparent 80%);
+  bottom: -20%;
+  left: 10%;
   animation: orbDriftLavender 28s ease-in-out infinite;
   animation-delay: -10s;
 }
 
 .zen-orb-sky {
-  background: #D5E8F4;
+  background: radial-gradient(closest-side, #D5E8F4 0%, rgba(213, 232, 244, 0.4) 50%, transparent 80%);
   top: 55%;
-  left: -10%;
+  left: -12%;
   animation: orbDriftSky 24s ease-in-out infinite;
   animation-delay: -16s;
 }
