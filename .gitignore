@@ -39,3 +39,9 @@ dev-dist
 
 # Claude Code
 .claude/
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
